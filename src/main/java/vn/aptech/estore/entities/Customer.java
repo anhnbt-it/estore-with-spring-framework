@@ -2,13 +2,10 @@ package vn.aptech.estore.entities;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.Date;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -25,4 +22,7 @@ public class Customer extends Person {
     private String companyCode;
     @Column(name = "customer_type")
     private Boolean customerType;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
 }

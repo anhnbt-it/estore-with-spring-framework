@@ -51,6 +51,9 @@ public class Product extends AbstractEntity {
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
 
+    @Column(name = "compare_at_price")
+    private BigDecimal compareAtPrice;
+
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;
 

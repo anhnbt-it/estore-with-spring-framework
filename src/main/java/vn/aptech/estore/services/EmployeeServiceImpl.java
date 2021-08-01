@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import vn.aptech.estore.entities.Employee;
 import vn.aptech.estore.repositories.EmployeeRepository;
 
+import java.util.Optional;
+
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -19,5 +21,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee save(Employee employee) {
         return employeeRepository.save(employee);
+    }
+
+    @Override
+    public Optional<Employee> findByUsername(String username) {
+        return Optional.ofNullable(employeeRepository.findByUsername(username));
     }
 }

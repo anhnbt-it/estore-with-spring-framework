@@ -5,15 +5,12 @@ import org.springframework.stereotype.Service;
 import vn.aptech.estore.entities.Brand;
 import vn.aptech.estore.repositories.BrandRepository;
 
+import java.util.Optional;
+
 @Service
 public class BrandServiceImpl implements BrandService {
-
-    private final BrandRepository brandRepository;
-
     @Autowired
-    public BrandServiceImpl(BrandRepository brandRepository) {
-        this.brandRepository = brandRepository;
-    }
+    private BrandRepository brandRepository;
 
     @Override
     public Iterable<Brand> findAll() {
@@ -23,5 +20,10 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public Brand save(Brand brand) {
         return brandRepository.save(brand);
+    }
+
+    @Override
+    public Optional<Brand> findById(Long id) {
+        return brandRepository.findById(id);
     }
 }

@@ -5,15 +5,13 @@ import org.springframework.stereotype.Service;
 import vn.aptech.estore.entities.Category;
 import vn.aptech.estore.repositories.CategoryRepository;
 
+import java.util.Optional;
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    private final CategoryRepository categoryRepository;
-
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
+    private CategoryRepository categoryRepository;
 
     @Override
     public Iterable<Category> findAll() {
@@ -23,5 +21,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category save(Category category) {
         return categoryRepository.save(category);
+    }
+
+    @Override
+    public Optional<Category> findById(Long id) {
+        return categoryRepository.findById(id);
     }
 }

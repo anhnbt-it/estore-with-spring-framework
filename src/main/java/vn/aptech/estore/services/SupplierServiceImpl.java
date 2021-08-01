@@ -5,15 +5,13 @@ import org.springframework.stereotype.Service;
 import vn.aptech.estore.entities.Supplier;
 import vn.aptech.estore.repositories.SupplierRepository;
 
+import java.util.Optional;
+
 @Service
 public class SupplierServiceImpl implements SupplierService {
 
-    private final SupplierRepository supplierRepository;
-
     @Autowired
-    public SupplierServiceImpl(SupplierRepository supplierRepository) {
-        this.supplierRepository = supplierRepository;
-    }
+    private SupplierRepository supplierRepository;
 
     @Override
     public Iterable<Supplier> findAll() {
@@ -23,5 +21,10 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public Supplier save(Supplier supplier) {
         return supplierRepository.save(supplier);
+    }
+
+    @Override
+    public Optional<Supplier> findById(Long id) {
+        return supplierRepository.findById(id);
     }
 }
