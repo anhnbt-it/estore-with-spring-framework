@@ -33,8 +33,11 @@ public class Constant {
         public static final String OBJECT_IS_EXISTS_BY_FIELD_VALUE = "Đối tượng {0} với giá trị của {1} là {2} đã tồn tại";
         public static final String MISSING_PARAM = "Thiếu dữ liệu đầu vào bắt buộc {0}";
         public static final String OBJECT_REQUIRED = "Trường không được để trống. Vui lòng nhập lại";
+        public static final String STR_REQUIRED = "Các trường bắt buộc được đánh dấu *";
+        public static final String STR_CONFIRM_EXIT = "Are you sure you want to exit? [y/N]";
+        public static final String STR_CONTINUE = "Do you want to continue?";
         public static final String INVALID_OPTION = "Bạn nhập sai, vui lòng nhập theo số thứ tự trên menu";
-        public static final String OBJECT_CREATED = "Đối tượng {0} đã được tạo thành công";
+        public static final String OBJECT_CREATED = "Đối tượng {0} đã được thêm thành công";
         public static final String SYSTEM_ERROR = "Lỗi hệ thống";
         public static final String LIST_EMPTY = "Danh sách trống";
     }

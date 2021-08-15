@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import vn.aptech.estore.entities.Role;
@@ -11,6 +12,7 @@ import vn.aptech.estore.entities.User;
 import vn.aptech.estore.services.AuthService;
 import vn.aptech.estore.services.UserService;
 
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -32,13 +34,16 @@ public class MainMenu extends BaseMenu implements CommandLineRunner {
     @Autowired
     private AuthMenu authMenu;
 
+    @Autowired
+    private MessageSource messageSource;
+
     private static final int USER_OPTION_LOGIN = 1;
     private static final int USER_OPTION_REGISTER = 2;
     private static final int USER_OPTION_SHOPPING = 3;
     private static final int USER_OPTION_EXIT = 0;
 
     public MainMenu() {
-        super("Hệ thống quản lý & bán điện thoại");
+        title = messageSource.getMessage("greetings", null, Locale.getDefault());
         menuItems.put(1, "Đăng nhập");
         menuItems.put(2, "Đăng ký");
         menuItems.put(3, "Xem cửa hàng");
@@ -51,7 +56,7 @@ public class MainMenu extends BaseMenu implements CommandLineRunner {
         try {
             do {
                 printMenuHeader();
-                System.out.print("Nhập lựa chọn của bạn [0-Thoát]: ");
+                System.out.println(messageSource.getMessage("message.choice.enter", null, new Locale("en", "US")));
                 choice = scanner.nextInt();
                 scanner.nextLine();
                 switch (choice) {

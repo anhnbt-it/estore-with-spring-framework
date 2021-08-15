@@ -4,6 +4,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import vn.aptech.estore.entities.Brand;
 import vn.aptech.estore.entities.Category;
@@ -14,10 +15,7 @@ import vn.aptech.estore.services.CategoryService;
 import vn.aptech.estore.services.ProductService;
 import vn.aptech.estore.services.SupplierService;
 
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 @Component
 public class ProductMenu extends CRUDMenu {
@@ -35,8 +33,11 @@ public class ProductMenu extends CRUDMenu {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     public ProductMenu() {
-        super("Sản phẩm");
+        title = messageSource.getMessage("title.product", null, Locale.getDefault());
     }
 
     @Override

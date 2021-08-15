@@ -28,4 +28,10 @@ public class StringCommon {
         DateFormat dateFormat = new SimpleDateFormat(Constant.DATE_FORMAT);
         return dateFormat.format(date);
     }
+
+    public static String truncate(String str, int length) {
+        if (str.length() > (length - 3))
+            str = str.substring(0, (length - 3)) + "...";
+        return str;
+    }
 }

@@ -1,8 +1,11 @@
 package vn.aptech.estore.menu;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import vn.aptech.estore.constant.Constant;
+
+import java.util.Locale;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,8 +24,11 @@ public class AdminMenu extends BaseMenu {
     @Autowired
     private ProductMenu productMenu;
 
+    @Autowired
+    private MessageSource messageSource;
+
     public AdminMenu() {
-        super("Quản trị viên");
+        title = messageSource.getMessage("title.administrator", null, Locale.getDefault());
         menuItems.put(OPTION_CATEGORY, "Quản lý Danh mục");
         menuItems.put(OPTION_PRODUCT, "Quản lý Sản phẩm");
     }
