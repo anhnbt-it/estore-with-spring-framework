@@ -4,21 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.sql.Date;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
-@MappedSuperclass
+@Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public abstract class Person extends AbstractEntity {
-    protected static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+@Table(name = "users")
+public class User extends AbstractEntity {
     protected String firstName;
     protected String lastName;
     protected String email;
@@ -31,15 +31,14 @@ public abstract class Person extends AbstractEntity {
     protected Date dateOfBirth;
     protected Boolean gender;
     protected boolean enabled;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 15)
+    private Role role;
 
-    public Person(String username, String password) {
+    public User(String username, String password, Role role) {
         this.username = username;
         this.password = password;
-//        this.password = PASSWORD_ENCODER.encode(password);
-    }
-
-    public void setPassword(String password) {
-        this.password = PASSWORD_ENCODER.encode(password);
+        this.role = role;
     }
 
     public String getFullName() {
