@@ -37,7 +37,7 @@ public class ProductMenu extends CRUDMenu {
     private MessageSource messageSource;
 
     public ProductMenu() {
-        title = messageSource.getMessage("title.product", null, Locale.getDefault());
+        super("Sản phẩm");
     }
 
     @Override

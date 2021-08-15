@@ -2,10 +2,12 @@ package vn.aptech.estore.menu;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Component;
 import vn.aptech.estore.constant.Constant;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Scanner;
 
 public abstract class BaseMenu {
     protected String title;
@@ -15,7 +17,8 @@ public abstract class BaseMenu {
     @Autowired
     private MessageSource messageSource;
 
-    public BaseMenu() {
+    public BaseMenu(String title) {
+        this.title = title;
         this.menuItems = new LinkedHashMap<>();
         this.scanner = new Scanner(System.in, "UTF-8");
     }
@@ -54,7 +57,26 @@ public abstract class BaseMenu {
                 System.out.println(Constant.Response.OBJECT_REQUIRED);
             }
         } while (str.equals(""));
-        return str;
+        return str.trim();
+    }
+
+    protected int enterInteger(String title) {
+        System.out.println(title);
+        int num = scanner.nextInt();
+        scanner.nextLine();
+        return num;
+    }
+
+    protected int enterInteger(String title, boolean required) {
+        int num;
+        do {
+            System.out.println(title);
+            num = scanner.nextInt();
+            if (num == 0 && required) {
+                System.out.println(Constant.Response.OBJECT_REQUIRED);
+            }
+        } while (num == 0);
+        return num;
     }
 
     protected void showMsg(Constant.MESSAGE_TYPE type, String msg) {

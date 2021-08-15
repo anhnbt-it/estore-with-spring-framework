@@ -24,8 +24,8 @@ public class StringCommon {
         return formatter.format(input) + " VND";
     }
 
-    public static String dateFormat(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat(Constant.DATE_FORMAT);
+    public static String dateFormat(Date date, String format) {
+        DateFormat dateFormat = new SimpleDateFormat(format);
         return dateFormat.format(date);
     }
 

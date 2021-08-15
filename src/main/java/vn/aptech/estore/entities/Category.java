@@ -23,12 +23,4 @@ public class Category extends AbstractEntity {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "name='" + name + '\'' +
-                ", thumbnailUrl='" + thumbnailUrl + '\'' +
-                '}';
-    }
 }

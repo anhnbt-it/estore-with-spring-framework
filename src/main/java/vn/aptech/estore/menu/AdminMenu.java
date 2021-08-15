@@ -17,6 +17,12 @@ import java.util.Locale;
 public class AdminMenu extends BaseMenu {
     private static final int OPTION_CATEGORY = 1;
     private static final int OPTION_PRODUCT = 2;
+    private static final int OPTION_EMPLOYEE = 3;
+    private static final int OPTION_CUSTOMER = 4;
+    private static final int OPTION_ORDER = 5;
+    private static final int OPTION_BRAND = 6;
+    private static final int OPTION_SUPPLIER = 7;
+    private static final int OPTION_STATISTICS = 8;
 
     @Autowired
     private CategoryMenu categoryMenu;
@@ -25,12 +31,33 @@ public class AdminMenu extends BaseMenu {
     private ProductMenu productMenu;
 
     @Autowired
+    private EmployeeMenu employeeMenu;
+
+    @Autowired
+    private CustomerMenu customerMenu;
+
+    @Autowired
+    private BrandMenu brandMenu;
+
+    @Autowired
+    private SupplierMenu supplierMenu;
+
+    @Autowired
+    private OrderMenu orderMenu;
+
+    @Autowired
     private MessageSource messageSource;
 
     public AdminMenu() {
-        title = messageSource.getMessage("title.administrator", null, Locale.getDefault());
+        super("Administrator");
         menuItems.put(OPTION_CATEGORY, "Quản lý Danh mục");
         menuItems.put(OPTION_PRODUCT, "Quản lý Sản phẩm");
+        menuItems.put(OPTION_EMPLOYEE, "Quản lý Nhân viên");
+        menuItems.put(OPTION_CUSTOMER, "Quản lý Khách hàng");
+        menuItems.put(OPTION_ORDER, "Quản lý Hóa đơn");
+        menuItems.put(OPTION_BRAND, "Quản lý Thương hiệu");
+        menuItems.put(OPTION_SUPPLIER, "Quản lý Nhà cung cấp");
+        menuItems.put(OPTION_STATISTICS, "Thống kê");
     }
 
     @Override
@@ -43,6 +70,19 @@ public class AdminMenu extends BaseMenu {
                 break;
             case OPTION_PRODUCT:
                 productMenu.start();
+                break;
+            case OPTION_EMPLOYEE:
+                employeeMenu.start();
+                break;
+            case OPTION_CUSTOMER:
+                customerMenu.start();
+                break;
+            case OPTION_ORDER:
+                orderMenu.start();
+            case OPTION_BRAND:
+                brandMenu.start();
+            case OPTION_SUPPLIER:
+                supplierMenu.start();
                 break;
             default:
                 showMsg(Constant.MESSAGE_TYPE.ERROR, Constant.Response.INVALID_OPTION);

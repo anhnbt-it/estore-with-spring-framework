@@ -43,7 +43,7 @@ public class MainMenu extends BaseMenu implements CommandLineRunner {
     private static final int USER_OPTION_EXIT = 0;
 
     public MainMenu() {
-        title = messageSource.getMessage("greetings", null, Locale.getDefault());
+        super("He thong quan ly ban hang");
         menuItems.put(1, "Đăng nhập");
         menuItems.put(2, "Đăng ký");
         menuItems.put(3, "Xem cửa hàng");

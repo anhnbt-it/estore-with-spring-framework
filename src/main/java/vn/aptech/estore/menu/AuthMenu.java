@@ -30,7 +30,7 @@ public class AuthMenu extends BaseMenu {
     private MessageSource messageSource;
 
     public AuthMenu() {
-        title = messageSource.getMessage("title.auth.signIn", null, Locale.getDefault());
+        super("Sign in");
     }
 
     @Override

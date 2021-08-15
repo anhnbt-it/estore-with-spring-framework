@@ -16,7 +16,8 @@ public abstract class CRUDMenu extends BaseMenu {
     protected static final int OPTION_FIND_ONE = 5;
     protected static final int OPTION_EXIT = 0;
 
-    public CRUDMenu() {
+    public CRUDMenu(String title) {
+        super(title);
         menuItems.put(OPTION_FIND_ALL, "Tất cả " + title);
         menuItems.put(OPTION_INSERT, "Thêm mới " + title);
         menuItems.put(OPTION_UPDATE, "Sửa " + title);

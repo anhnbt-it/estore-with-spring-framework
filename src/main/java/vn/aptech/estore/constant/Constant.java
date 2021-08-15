@@ -38,6 +38,8 @@ public class Constant {
         public static final String STR_CONTINUE = "Do you want to continue?";
         public static final String INVALID_OPTION = "Bạn nhập sai, vui lòng nhập theo số thứ tự trên menu";
         public static final String OBJECT_CREATED = "Đối tượng {0} đã được thêm thành công";
+        public static final String OBJECT_UPDATED = "Đối tượng {0} đã được cập nhật thành công";
+        public static final String OBJECT_DELETED = "Đối tượng {0} đã được xóa thành công";
         public static final String SYSTEM_ERROR = "Lỗi hệ thống";
         public static final String LIST_EMPTY = "Danh sách trống";
     }
