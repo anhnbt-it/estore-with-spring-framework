@@ -18,11 +18,11 @@ public abstract class CRUDMenu extends BaseMenu {
 
     public CRUDMenu(String title) {
         super(title);
-        menuItems.put(OPTION_FIND_ALL, "Tất cả " + title);
+        menuItems.put(OPTION_FIND_ALL, "Tìm kiếm " + title);
         menuItems.put(OPTION_INSERT, "Thêm mới " + title);
-        menuItems.put(OPTION_UPDATE, "Sửa " + title);
+        menuItems.put(OPTION_UPDATE, "Sửa thông tin " + title);
         menuItems.put(OPTION_DELETE, "Xóa " + title);
-        menuItems.put(OPTION_FIND_ONE, "Xem thông tin " + title);
+        menuItems.put(OPTION_FIND_ONE, "Xem chi tiết " + title);
         menuItems.put(OPTION_EXIT, "Quay lại");
     }
 

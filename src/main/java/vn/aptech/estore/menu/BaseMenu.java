@@ -36,6 +36,17 @@ public abstract class BaseMenu {
         }
     }
 
+    public void printMenuHeader(String subTitle) {
+        System.out.println("******************************************************");
+        System.out.println(title.toUpperCase());
+        System.out.println("******************************************************");
+        System.out.println(subTitle);
+        System.out.println("======================================================");
+        for (Map.Entry<Integer, String> item : menuItems.entrySet()) {
+            System.out.println(item.getKey() + ") " + item.getValue());
+        }
+    }
+
     protected int enterChoice() {
         System.out.println(messageSource.getMessage("message.choice.enter", new Object[]{}, Locale.getDefault()));
         int choice = scanner.nextInt();

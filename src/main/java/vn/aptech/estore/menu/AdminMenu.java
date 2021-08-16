@@ -4,8 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import vn.aptech.estore.constant.Constant;
-
-import java.util.Locale;
+import vn.aptech.estore.services.AuthService;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,6 +22,9 @@ public class AdminMenu extends BaseMenu {
     private static final int OPTION_BRAND = 6;
     private static final int OPTION_SUPPLIER = 7;
     private static final int OPTION_STATISTICS = 8;
+    private static final int OPTION_PROFILE = 9;
+    private static final int OPTION_SIGNOUT = 10;
+    private static final int OPTION_EXIT = 11;
 
     @Autowired
     private CategoryMenu categoryMenu;
@@ -46,6 +48,18 @@ public class AdminMenu extends BaseMenu {
     private OrderMenu orderMenu;
 
     @Autowired
+    private StatisticsMenu statisticsMenu;
+
+    @Autowired
+    private ProfileMenu profileMenu;
+
+    @Autowired
+    private SignOutMenu signOutMenu;
+
+    @Autowired
+    private ExitMenu exitMenu;
+
+    @Autowired
     private MessageSource messageSource;
 
     public AdminMenu() {
@@ -57,36 +71,60 @@ public class AdminMenu extends BaseMenu {
         menuItems.put(OPTION_ORDER, "Quản lý Hóa đơn");
         menuItems.put(OPTION_BRAND, "Quản lý Thương hiệu");
         menuItems.put(OPTION_SUPPLIER, "Quản lý Nhà cung cấp");
-        menuItems.put(OPTION_STATISTICS, "Thống kê");
+        menuItems.put(OPTION_STATISTICS, "Báo cáo/Thống kê");
+        menuItems.put(OPTION_PROFILE, "Tài khoản");
+        menuItems.put(OPTION_SIGNOUT, "Đăng xuất");
+        menuItems.put(OPTION_EXIT, "Thoát");
+
     }
 
     @Override
     public void start() {
-        printMenuHeader();
-        int choice = enterChoice();
-        switch (choice) {
-            case OPTION_CATEGORY:
-                categoryMenu.start();
-                break;
-            case OPTION_PRODUCT:
-                productMenu.start();
-                break;
-            case OPTION_EMPLOYEE:
-                employeeMenu.start();
-                break;
-            case OPTION_CUSTOMER:
-                customerMenu.start();
-                break;
-            case OPTION_ORDER:
-                orderMenu.start();
-            case OPTION_BRAND:
-                brandMenu.start();
-            case OPTION_SUPPLIER:
-                supplierMenu.start();
-                break;
-            default:
-                showMsg(Constant.MESSAGE_TYPE.ERROR, Constant.Response.INVALID_OPTION);
+        try {
+            do {
+                printMenuHeader("Xin chào: " + AuthService.user.getUsername());
+                int choice = enterChoice();
+                switch (choice) {
+                    case OPTION_CATEGORY:
+                        categoryMenu.start();
+                        break;
+                    case OPTION_PRODUCT:
+                        productMenu.start();
+                        break;
+                    case OPTION_EMPLOYEE:
+                        employeeMenu.start();
+                        break;
+                    case OPTION_CUSTOMER:
+                        customerMenu.start();
+                        break;
+                    case OPTION_ORDER:
+                        orderMenu.start();
+                        break;
+                    case OPTION_BRAND:
+                        brandMenu.start();
+                        break;
+                    case OPTION_SUPPLIER:
+                        supplierMenu.start();
+                        break;
+                    case OPTION_STATISTICS:
+                        statisticsMenu.start();
+                        break;
+                    case OPTION_PROFILE:
+                        profileMenu.start();
+                        break;
+                    case OPTION_SIGNOUT:
+                        signOutMenu.start();
+                        break;
+                    case OPTION_EXIT:
+                        exitMenu.start();
+                        break;
+                    default:
+                        showMsg(Constant.MESSAGE_TYPE.ERROR, Constant.Response.INVALID_OPTION);
 
+                }
+            } while (true);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 }
