@@ -70,7 +70,7 @@ public class Product extends AbstractEntity {
 
     private Boolean status;
 
-    private Float discount;
+    private Float discountPercent;
 
     @Override
     public String toString() {
@@ -83,7 +83,7 @@ public class Product extends AbstractEntity {
                 ", unitsInStock=" + unitsInStock +
                 ", unitsOnOrder=" + unitsOnOrder +
                 ", status=" + status +
-                ", discount=" + discount +
+                ", discount=" + discountPercent +
                 '}';
     }
 }

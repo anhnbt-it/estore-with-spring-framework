@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import vn.aptech.estore.constant.Constant;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -78,6 +79,26 @@ public abstract class BaseMenu {
         return num;
     }
 
+    protected BigDecimal enterBigDecimal(String title, boolean required) {
+        BigDecimal num;
+        do {
+            System.out.println(title);
+            num = scanner.nextBigDecimal();
+            if (num == null && required) {
+                System.out.println(Constant.Response.OBJECT_REQUIRED);
+            }
+        } while (num == null);
+        scanner.nextLine();
+        return num;
+    }
+
+    protected BigDecimal enterBigDecimal(String title) {
+        System.out.println(title);
+        BigDecimal num = scanner.nextBigDecimal();
+        scanner.nextLine();
+        return num;
+    }
+
     protected int enterInteger(String title, boolean required) {
         int num;
         do {
@@ -87,6 +108,7 @@ public abstract class BaseMenu {
                 System.out.println(Constant.Response.OBJECT_REQUIRED);
             }
         } while (num == 0);
+        scanner.nextLine();
         return num;
     }
 
