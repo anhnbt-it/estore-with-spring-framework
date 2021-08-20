@@ -6,4 +6,5 @@ import vn.aptech.estore.entities.Product;
 
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Long> {
+    Iterable<Product> findAllByOrderByCreatedDateDesc();
 }

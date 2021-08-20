@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import vn.aptech.estore.entities.Product;
 import vn.aptech.estore.repositories.ProductRepository;
 
+import java.util.Optional;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -17,7 +19,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Iterable<Product> findAllByOrderByCreatedDateDesc() {
+        return productRepository.findAllByOrderByCreatedDateDesc();
+    }
+
+    @Override
     public Product save(Product product) {
         return productRepository.save(product);
+    }
+
+    @Override
+    public Optional<Product> findById(Long id) {
+        return productRepository.findById(id);
     }
 }

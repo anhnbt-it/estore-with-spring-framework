@@ -49,10 +49,10 @@ public class Product extends AbstractEntity {
     private String name;
 
     @Column(name = "unit_price")
-    private BigDecimal unitPrice;
+    private Double unitPrice;
 
     @Column(name = "compare_at_price")
-    private BigDecimal compareAtPrice;
+    private Double compareAtPrice;
 
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;

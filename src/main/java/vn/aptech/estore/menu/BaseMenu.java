@@ -79,22 +79,22 @@ public abstract class BaseMenu {
         return num;
     }
 
-    protected BigDecimal enterBigDecimal(String title, boolean required) {
-        BigDecimal num;
+    protected double enterDouble(String title, boolean required) {
+        double num;
         do {
             System.out.println(title);
-            num = scanner.nextBigDecimal();
-            if (num == null && required) {
+            num = scanner.nextDouble();
+            if (num == 0 && required) {
                 System.out.println(Constant.Response.OBJECT_REQUIRED);
             }
-        } while (num == null);
+        } while (num == 0);
         scanner.nextLine();
         return num;
     }
 
-    protected BigDecimal enterBigDecimal(String title) {
+    protected double enterDouble(String title) {
         System.out.println(title);
-        BigDecimal num = scanner.nextBigDecimal();
+        double num = scanner.nextDouble();
         scanner.nextLine();
         return num;
     }

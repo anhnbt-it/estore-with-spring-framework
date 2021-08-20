@@ -8,8 +8,12 @@ import vn.aptech.estore.constant.Constant;
 import vn.aptech.estore.entities.Product;
 import vn.aptech.estore.menu.BaseMenu;
 import vn.aptech.estore.services.ProductService;
+import vn.aptech.estore.services.ShoppingCartService;
 
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,6 +34,9 @@ public class HomeMenu extends BaseMenu {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private ShoppingCartService shoppingCartService;
+
     public HomeMenu() {
         super("Cửa hàng");
         this.menuItems.put(1, "Sản phẩm mới nhất");
@@ -46,14 +53,29 @@ public class HomeMenu extends BaseMenu {
         int choice = enterChoice();
         switch (choice) {
             case OPTION_RECENT_PRODUCT:
-                List<Product> products = IterableUtils.toList(productService.findAll());
+                List<Product> products = IterableUtils.toList(productService.findAllByOrderByCreatedDateDesc());
                 if (products.isEmpty()) {
                     showMsg(Constant.MESSAGE_TYPE.INFO, Constant.Response.LIST_EMPTY);
                 } else {
-                    System.out.printf("| %-5s | %-20s | %-15s | %-5s |%n", "ID", "Tên", "Giá", "% Giảm");
+                    System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-15s |%n", "ID", "Tên", "Giá", "% Giảm", "Giá giảm");
                     for (Product product : products) {
-                        System.out.printf("| %-5s | %-20s | %-15s | %-5s |%n", product.getId(), StringCommon.truncate(product.getName(), 20),
-                                StringCommon.convertBigDecimalToVND(product.getUnitPrice()), product.getDiscountStr());
+                        System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-15s |%n", product.getId(), StringCommon.truncate(product.getName(), 20),
+                                StringCommon.convertDoubleToVND(product.getUnitPrice()), product.getDiscountStr(), StringCommon.convertDoubleToVND(product.getCompareAtPrice()));
+                    }
+                    long productId = enterInteger("Nhập ID sản phẩm bạn muốn mua: ", true);
+                    Optional<Product> product = productService.findById(productId);
+                    if (!product.isPresent()) {
+                        System.out.println("Khong tim thay san pham");
+                    } else {
+                        int qty = enterInteger("Nhap so luong: ", true);
+                        if (qty < 1) {
+                            System.out.println("So luong toi thieu phai la 1");
+                        } else if (qty > product.get().getQuantity()) {
+                            System.out.println("Xin loi, san pham khong du so luong. Ban co the mua toi da la " + product.get().getQuantity());
+                            qty = product.get().getQuantity();
+                        }
+                        product.get().setQuantity(qty);
+                        shoppingCartService.addToCart(product.get());
                     }
                 }
                 break;
@@ -62,6 +84,23 @@ public class HomeMenu extends BaseMenu {
             case OPTION_ALL_CATEGORIES:
                 break;
             case OPTION_SHOPPING_CART:
+                Hashtable<Long, Product> items = shoppingCartService.getItems();
+                if (items.isEmpty()) {
+                    System.out.println("Gio hang cua ban trong!");
+                } else {
+                    printTitle("Gio hang co " + items.size() + " san pham");
+                    System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-5s | %-15s |%n", "ID", "Tên", "Đơn giá", "% Giảm", "Số lượng", "Thành tiền");
+                    Enumeration<Long> enu = items.keys();
+                    while (enu.hasMoreElements()) {
+                        long key = enu.nextElement();
+                        Product product = items.get(key);
+                        double total = product.getUnitPrice() * product.getQuantity();
+                        System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-5s | %-15s |%n", product.getId(), StringCommon.truncate(product.getName(), 20),
+                                StringCommon.convertDoubleToVND(product.getUnitPrice()), product.getDiscountStr(), product.getQuantity(), StringCommon.convertDoubleToVND(total));
+                    }
+                    shoppingCartService.getNumberOfItems();
+                    System.out.println("Cart subtotal (" + items.size() + " items): " + StringCommon.convertDoubleToVND(shoppingCartService.getTotal()));
+                }
                 break;
             case OPTION_PROFILE:
                 break;

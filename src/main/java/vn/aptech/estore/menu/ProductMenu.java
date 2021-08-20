@@ -15,8 +15,9 @@ import vn.aptech.estore.services.CategoryService;
 import vn.aptech.estore.services.ProductService;
 import vn.aptech.estore.services.SupplierService;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ProductMenu extends CRUDMenu {
@@ -107,7 +108,7 @@ public class ProductMenu extends CRUDMenu {
             product.setName(enterString("Nhập tên: ", true));
             product.setDescription(enterString("Nhập mô tả: "));
             product.setThumbnailUrl("Nhập ảnh: ");
-            product.setUnitPrice(enterBigDecimal("Nhập giá: ", true));
+            product.setUnitPrice(enterDouble("Nhập giá: ", true));
             System.out.println("Nhập % giảm giá (Ví dụ: 0.1 tương đương 10%): ");
             product.setDiscountPercent(scanner.nextFloat());
 
@@ -118,8 +119,7 @@ public class ProductMenu extends CRUDMenu {
             product.setStatus(scanner.nextBoolean());
 
 
-            BigDecimal decimalDiscountPercent = new BigDecimal(Double.toString(product.getDiscountPercent()));
-            product.setCompareAtPrice(product.getUnitPrice().subtract(product.getUnitPrice().multiply(decimalDiscountPercent)));
+            product.setCompareAtPrice(product.getUnitPrice() - product.getUnitPrice() * product.getDiscountPercent());
             Product newProduct = productService.save(product);
             if (newProduct.getId() != null) {
                 System.out.println("Thêm sản phẩm mới thành công!");
