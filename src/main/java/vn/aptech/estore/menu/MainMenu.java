@@ -9,11 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import vn.aptech.estore.entities.Role;
 import vn.aptech.estore.entities.User;
-import vn.aptech.estore.services.AuthService;
+import vn.aptech.estore.menu.home.HomeMenu;
 import vn.aptech.estore.services.UserService;
 
 import java.util.Locale;
-import java.util.Scanner;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,6 +32,9 @@ public class MainMenu extends BaseMenu implements CommandLineRunner {
 
     @Autowired
     private AuthMenu authMenu;
+
+    @Autowired
+    private HomeMenu homeMenu;
 
     @Autowired
     private MessageSource messageSource;
@@ -67,8 +69,7 @@ public class MainMenu extends BaseMenu implements CommandLineRunner {
                         authMenu.register();
                         break;
                     case USER_OPTION_SHOPPING:
-                        System.out.println("Xin chào: " + AuthService.user);
-                        System.out.println("Chức năng chưa hoàn thiện");
+                        homeMenu.start();
                         break;
                     case USER_OPTION_EXIT:
                         System.exit(0);

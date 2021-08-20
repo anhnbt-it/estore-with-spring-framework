@@ -1,11 +1,12 @@
 package vn.aptech.estore.common;
 
-import vn.aptech.estore.constant.Constant;
-
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,6 +23,11 @@ public class StringCommon {
     public static String convertDoubleToVND(double input) {
         DecimalFormat formatter = new DecimalFormat("###,###,###");
         return formatter.format(input) + " VND";
+    }
+
+    public static String convertBigDecimalToVND(BigDecimal input) {
+        Locale.setDefault(new Locale("vi", "VN"));
+        return NumberFormat.getCurrencyInstance().format(input);
     }
 
     public static String dateFormat(Date date, String format) {

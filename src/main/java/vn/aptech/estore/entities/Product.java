@@ -72,6 +72,10 @@ public class Product extends AbstractEntity {
 
     private Float discountPercent;
 
+    public String getDiscountStr() {
+        return (discountPercent > 0) ? "-" + (discountPercent * 100) + "%" : "0";
+    }
+
     @Override
     public String toString() {
         return "Product{" +
