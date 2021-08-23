@@ -6,7 +6,9 @@ import vn.aptech.estore.entities.Customer;
 import vn.aptech.estore.entities.Order;
 import vn.aptech.estore.menu.AuthMenu;
 import vn.aptech.estore.menu.BaseMenu;
+import vn.aptech.estore.services.CustomerService;
 import vn.aptech.estore.services.OrderService;
+import vn.aptech.estore.services.ShoppingCartService;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,6 +25,12 @@ public class PaymentMenu extends BaseMenu {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private ShoppingCartService shoppingCartService;
+
     public PaymentMenu() {
         super("Thông tin thanh toán");
     }
@@ -35,16 +43,21 @@ public class PaymentMenu extends BaseMenu {
         } else {
             Order order = new Order();
             printMenuHeader("Địa chỉ giao hàng");
-            String firstName = enterString("Họ tên: ", true);
-            String fullName = enterString("Họ tên: ", true);
+            String firstName = enterString("Họ: ", true);
+            String lastName = enterString("Tên: ", true);
             String email = enterString("Email: ", true);
             String phone = enterString("Số điện thoại: ", true);
-            String provinces = enterString("Tỉnh/Thành phố: ", true);
-            String districts = enterString("Quận/Huyện: ", true);
-            String wards = enterString("Phường/Xã: ", true);
-            String address = enterString("Địa chỉ nhận hàng: ", true);
+            // Ẩn tạm vì chưa hoàn thiện entity
+//            String provinces = enterString("Tỉnh/Thành phố: ", true);
+//            String districts = enterString("Quận/Huyện: ", true);
+//            String wards = enterString("Phường/Xã: ", true);
+//            String address = enterString("Địa chỉ nhận hàng: ", true);
             Customer customer = new Customer();
-            customer.setFirstName();
+            customer.setFirstName(firstName);
+            customer.setLastName(lastName);
+            customer.setEmail(email);
+            customer.setPhone(phone);
+
             printTitle("Chọn hình thức giao hàng");
             int shippingMethod = 1;
             System.out.println("1) [x] Giao hàng tận nơi");
@@ -62,6 +75,11 @@ public class PaymentMenu extends BaseMenu {
             }
             choice = enterString("Xác nhận thanh toán? [y/N]: ", true);
             if ("y".equalsIgnoreCase(choice)) {
+                Customer newCustomer = customerService.save(customer);
+                order.setCustomer(newCustomer);
+                order.setProducts(shoppingCartService.getProducts());
+                order.setPayment(String.valueOf(paymentMethod));
+                order.setShipping(String.valueOf(shippingMethod));
                 Order newOrder = orderService.save(order);
                 if (newOrder != null) {
                     System.out.println("Cảm ơn bạn đã đặt hàng");

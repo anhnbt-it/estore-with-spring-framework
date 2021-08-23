@@ -4,6 +4,7 @@ import vn.aptech.estore.entities.Product;
 
 import java.math.BigDecimal;
 import java.util.Hashtable;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,6 +24,8 @@ public interface ShoppingCartService {
     void removeAll();
 
     Hashtable<Long, Product> getItems();
+
+    Set<Product> getProducts();
 
     double getTotal();
 

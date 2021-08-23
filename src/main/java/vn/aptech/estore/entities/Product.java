@@ -38,12 +38,7 @@ public class Product extends AbstractEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "order_details",
-            joinColumns = {@JoinColumn(name = "product_id")},
-            inverseJoinColumns = {@JoinColumn(name = "order_id")}
-    )
+    @ManyToMany(mappedBy = "products", fetch = FetchType.EAGER)
     private Set<Order> orders;
 
     private String name;

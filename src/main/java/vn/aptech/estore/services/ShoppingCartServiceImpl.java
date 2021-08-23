@@ -3,8 +3,7 @@ package vn.aptech.estore.services;
 import org.springframework.stereotype.Service;
 import vn.aptech.estore.entities.Product;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,6 +24,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public Hashtable<Long, Product> getItems() {
         return items;
+    }
+
+    @Override
+    public Set<Product> getProducts() {
+        Set<Product> products = new HashSet<>();
+        Enumeration<Long> enu = items.keys();
+        while (enu.hasMoreElements()) {
+            long key = enu.nextElement();
+            Product product = items.get(key);
+            products.add(product);
+        }
+        return products;
     }
 
     @Override
