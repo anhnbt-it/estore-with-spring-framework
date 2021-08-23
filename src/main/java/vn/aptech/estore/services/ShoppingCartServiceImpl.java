@@ -42,7 +42,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         } else {
             // Them san pham vao gio hang
             items.put(id, product);
-            System.out.println("Them san pham vao gio hang thanh cong!");
+            System.out.println("Thêm vào giỏ hàng thành công!!");
         }
     }
 

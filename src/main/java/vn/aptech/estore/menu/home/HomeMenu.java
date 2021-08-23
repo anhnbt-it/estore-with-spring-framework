@@ -37,6 +37,9 @@ public class HomeMenu extends BaseMenu {
     @Autowired
     private ShoppingCartService shoppingCartService;
 
+    @Autowired
+    private PaymentMenu paymentMenu;
+
     public HomeMenu() {
         super("Cửa hàng");
         this.menuItems.put(1, "Sản phẩm mới nhất");
@@ -65,13 +68,13 @@ public class HomeMenu extends BaseMenu {
                     long productId = enterInteger("Nhập ID sản phẩm bạn muốn mua: ", true);
                     Optional<Product> product = productService.findById(productId);
                     if (!product.isPresent()) {
-                        System.out.println("Khong tim thay san pham");
+                        System.out.println("Không có sản phẩm nào");
                     } else {
                         int qty = enterInteger("Nhap so luong: ", true);
                         if (qty < 1) {
                             System.out.println("So luong toi thieu phai la 1");
                         } else if (qty > product.get().getQuantity()) {
-                            System.out.println("Xin loi, san pham khong du so luong. Ban co the mua toi da la " + product.get().getQuantity());
+                            System.out.println("* Số lượng tối đa được phép mua: " + product.get().getQuantity());
                             qty = product.get().getQuantity();
                         }
                         product.get().setQuantity(qty);
@@ -86,9 +89,9 @@ public class HomeMenu extends BaseMenu {
             case OPTION_SHOPPING_CART:
                 Hashtable<Long, Product> items = shoppingCartService.getItems();
                 if (items.isEmpty()) {
-                    System.out.println("Gio hang cua ban trong!");
+                    System.out.println("Không có sản phẩm nào trong giỏ hàng!");
                 } else {
-                    printTitle("Gio hang co " + items.size() + " san pham");
+                    printTitle("Tất cả (" + items.size() + ") sản phẩm");
                     System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-5s | %-15s |%n", "ID", "Tên", "Đơn giá", "% Giảm", "Số lượng", "Thành tiền");
                     Enumeration<Long> enu = items.keys();
                     while (enu.hasMoreElements()) {
@@ -99,7 +102,11 @@ public class HomeMenu extends BaseMenu {
                                 StringCommon.convertDoubleToVND(product.getUnitPrice()), product.getDiscountStr(), product.getQuantity(), StringCommon.convertDoubleToVND(total));
                     }
                     shoppingCartService.getNumberOfItems();
-                    System.out.println("Cart subtotal (" + items.size() + " items): " + StringCommon.convertDoubleToVND(shoppingCartService.getTotal()));
+                    System.out.println("Tổng Số Tiền (gồm VAT): " + StringCommon.convertDoubleToVND(shoppingCartService.getTotal()));
+                    String payment = enterString("Ban co muon thanh toan khong? [y/N]");
+                    if (payment.equalsIgnoreCase("y")) {
+                        paymentMenu.start();
+                    }
                 }
                 break;
             case OPTION_PROFILE:
