@@ -10,8 +10,6 @@ import vn.aptech.estore.menu.BaseMenu;
 import vn.aptech.estore.services.ProductService;
 import vn.aptech.estore.services.ShoppingCartService;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +36,7 @@ public class HomeMenu extends BaseMenu {
     private ShoppingCartService shoppingCartService;
 
     @Autowired
-    private PaymentMenu paymentMenu;
+    private CartMenu cartMenu;
 
     public HomeMenu() {
         super("Cửa hàng");
@@ -52,69 +50,51 @@ public class HomeMenu extends BaseMenu {
 
     @Override
     public void start() {
-        printMenuHeader();
-        int choice = enterChoice();
-        switch (choice) {
-            case OPTION_RECENT_PRODUCT:
-                List<Product> products = IterableUtils.toList(productService.findAllByOrderByCreatedDateDesc());
-                if (products.isEmpty()) {
-                    showMsg(Constant.MESSAGE_TYPE.INFO, Constant.Response.LIST_EMPTY);
-                } else {
-                    System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-15s |%n", "ID", "Tên", "Giá", "% Giảm", "Giá giảm");
-                    for (Product product : products) {
-                        System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-15s |%n", product.getId(), StringCommon.truncate(product.getName(), 20),
-                                StringCommon.convertDoubleToVND(product.getUnitPrice()), product.getDiscountStr(), StringCommon.convertDoubleToVND(product.getCompareAtPrice()));
-                    }
-                    long productId = enterInteger("Nhập ID sản phẩm bạn muốn mua: ", true);
-                    Optional<Product> product = productService.findById(productId);
-                    if (!product.isPresent()) {
-                        System.out.println("Không có sản phẩm nào");
+        do {
+            printMenuHeader();
+            int choice = enterChoice();
+            switch (choice) {
+                case OPTION_RECENT_PRODUCT:
+                    List<Product> products = IterableUtils.toList(productService.findAllByOrderByCreatedDateDesc());
+                    if (products.isEmpty()) {
+                        showMsg(Constant.MESSAGE_TYPE.INFO, Constant.Response.LIST_EMPTY);
                     } else {
-                        int qty = enterInteger("Nhap so luong: ", true);
-                        if (qty < 1) {
-                            System.out.println("So luong toi thieu phai la 1");
-                        } else if (qty > product.get().getQuantity()) {
-                            System.out.println("* Số lượng tối đa được phép mua: " + product.get().getQuantity());
-                            qty = product.get().getQuantity();
+                        System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-15s |%n", "ID", "Tên", "Giá", "% Giảm", "Giá giảm");
+                        for (Product product : products) {
+                            System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-15s |%n", product.getId(), StringCommon.truncate(product.getName(), 20),
+                                    StringCommon.convertDoubleToVND(product.getUnitPrice()), product.getDiscountStr(), StringCommon.convertDoubleToVND(product.getCompareAtPrice()));
                         }
-                        product.get().setQuantity(qty);
-                        shoppingCartService.addToCart(product.get());
+                        long productId = enterInteger("Nhập ID sản phẩm bạn muốn mua: ", true);
+                        Optional<Product> product = productService.findById(productId);
+                        if (!product.isPresent()) {
+                            System.out.println("Không có sản phẩm nào");
+                        } else {
+                            int qty = enterInteger("Nhap so luong: ", true);
+                            if (qty < 1) {
+                                System.out.println("So luong toi thieu phai la 1");
+                            } else if (qty > product.get().getQuantity()) {
+                                System.out.println("* Số lượng tối đa được phép mua: " + product.get().getQuantity());
+                                qty = product.get().getQuantity();
+                            }
+                            product.get().setQuantity(qty);
+                            shoppingCartService.addToCart(product.get());
+                        }
                     }
-                }
-                break;
-            case OPTION_POPULAR_PRODUCT:
-                break;
-            case OPTION_ALL_CATEGORIES:
-                break;
-            case OPTION_SHOPPING_CART:
-                Hashtable<Long, Product> items = shoppingCartService.getItems();
-                if (items.isEmpty()) {
-                    System.out.println("Không có sản phẩm nào trong giỏ hàng!");
-                } else {
-                    printTitle("Tất cả (" + items.size() + ") sản phẩm");
-                    System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-5s | %-15s |%n", "ID", "Tên", "Đơn giá", "% Giảm", "Số lượng", "Thành tiền");
-                    Enumeration<Long> enu = items.keys();
-                    while (enu.hasMoreElements()) {
-                        long key = enu.nextElement();
-                        Product product = items.get(key);
-                        double total = product.getUnitPrice() * product.getQuantity();
-                        System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-5s | %-15s |%n", product.getId(), StringCommon.truncate(product.getName(), 20),
-                                StringCommon.convertDoubleToVND(product.getUnitPrice()), product.getDiscountStr(), product.getQuantity(), StringCommon.convertDoubleToVND(total));
-                    }
-                    shoppingCartService.getNumberOfItems();
-                    System.out.println("Tổng Số Tiền (gồm VAT): " + StringCommon.convertDoubleToVND(shoppingCartService.getTotal()));
-                    String payment = enterString("Ban co muon thanh toan khong? [y/N]");
-                    if (payment.equalsIgnoreCase("y")) {
-                        paymentMenu.start();
-                    }
-                }
-                break;
-            case OPTION_PROFILE:
-                break;
-            case OPTION_BACK:
-                return;
-            default:
-                System.out.println("Bạn nhập sai, vui lòng nhập theo số thứ tự trên menu!");
-        }
+                    break;
+                case OPTION_POPULAR_PRODUCT:
+                    break;
+                case OPTION_ALL_CATEGORIES:
+                    break;
+                case OPTION_SHOPPING_CART:
+                    cartMenu.start();
+                    break;
+                case OPTION_PROFILE:
+                    break;
+                case OPTION_BACK:
+                    return;
+                default:
+                    System.out.println("Bạn nhập sai, vui lòng nhập theo số thứ tự trên menu!");
+            }
+        } while (true);
     }
 }

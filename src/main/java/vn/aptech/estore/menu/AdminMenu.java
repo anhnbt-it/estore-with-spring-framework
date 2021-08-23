@@ -1,9 +1,13 @@
 package vn.aptech.estore.menu;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import vn.aptech.estore.constant.Constant;
+import vn.aptech.estore.menu.home.HomeMenu;
 import vn.aptech.estore.services.AuthService;
 
 /**
@@ -24,7 +28,8 @@ public class AdminMenu extends BaseMenu {
     private static final int OPTION_STATISTICS = 8;
     private static final int OPTION_PROFILE = 9;
     private static final int OPTION_SIGNOUT = 10;
-    private static final int OPTION_EXIT = 11;
+    private static final int OPTION_SHOPPING = 11;
+    private static final int OPTION_BACK = 0;
 
     @Autowired
     private CategoryMenu categoryMenu;
@@ -57,10 +62,14 @@ public class AdminMenu extends BaseMenu {
     private SignOutMenu signOutMenu;
 
     @Autowired
+    private HomeMenu homeMenu;
+
+    @Autowired
     private ExitMenu exitMenu;
 
     @Autowired
     private MessageSource messageSource;
+    private static final Logger LOGGER = LogManager.getLogger();
 
     public AdminMenu() {
         super("Administrator");
@@ -74,16 +83,18 @@ public class AdminMenu extends BaseMenu {
         menuItems.put(OPTION_STATISTICS, "Báo cáo/Thống kê");
         menuItems.put(OPTION_PROFILE, "Tài khoản");
         menuItems.put(OPTION_SIGNOUT, "Đăng xuất");
-        menuItems.put(OPTION_EXIT, "Thoát");
+        menuItems.put(OPTION_SHOPPING, "Cửa hàng");
+        menuItems.put(OPTION_BACK, "Quay lại");
 
     }
 
     @Override
     public void start() {
         try {
+            int choice;
             do {
                 printMenuHeader("Xin chào: " + AuthService.user.getUsername());
-                int choice = enterChoice();
+                choice = enterChoice();
                 switch (choice) {
                     case OPTION_CATEGORY:
                         categoryMenu.start();
@@ -115,16 +126,19 @@ public class AdminMenu extends BaseMenu {
                     case OPTION_SIGNOUT:
                         signOutMenu.start();
                         break;
-                    case OPTION_EXIT:
+                    case OPTION_SHOPPING:
+                        homeMenu.start();
+                        break;
+                    case OPTION_BACK:
                         exitMenu.start();
                         break;
                     default:
                         showMsg(Constant.MESSAGE_TYPE.ERROR, Constant.Response.INVALID_OPTION);
 
                 }
-            } while (true);
+            } while (choice != 0);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            LOGGER.log(Level.ERROR, e);
         }
     }
 }

@@ -2,9 +2,11 @@ package vn.aptech.estore.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.aptech.estore.entities.Customer;
 import vn.aptech.estore.repositories.CustomerRepository;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 /**
@@ -24,6 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findAll();
     }
 
+    @Transactional(rollbackFor = {SQLException.class})
     @Override
     public Customer save(Customer customer) {
         return customerRepository.save(customer);

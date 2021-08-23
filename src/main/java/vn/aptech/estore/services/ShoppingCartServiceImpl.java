@@ -14,25 +14,23 @@ import java.util.*;
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     private double total;
-    private final Hashtable<Long, Product> items;
+    private final Map<Long, Product> items;
     private int numberOfItems;
 
     public ShoppingCartServiceImpl() {
-        this.items = new Hashtable<>();
+        this.items = new HashMap<>();
     }
 
     @Override
-    public Hashtable<Long, Product> getItems() {
+    public Map<Long, Product> getItems() {
         return items;
     }
 
     @Override
     public Set<Product> getProducts() {
         Set<Product> products = new HashSet<>();
-        Enumeration<Long> enu = items.keys();
-        while (enu.hasMoreElements()) {
-            long key = enu.nextElement();
-            Product product = items.get(key);
+        for (Map.Entry<Long, Product> entry : items.entrySet()) {
+            Product product = entry.getValue();
             products.add(product);
         }
         return products;
@@ -83,14 +81,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public int getNumberOfItems() {
-        Enumeration<Long> enu = items.keys();
-        while (enu.hasMoreElements()) {
-            long key = enu.nextElement();
-            Product product = items.get(key);
+        for (Map.Entry<Long, Product> entry : items.entrySet()) {
+            Product product = entry.getValue();
             total += product.getQuantity() * product.getUnitPrice();
             numberOfItems += product.getQuantity();
         }
-
         return numberOfItems;
     }
 }

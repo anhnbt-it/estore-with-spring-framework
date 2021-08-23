@@ -3,7 +3,9 @@ package vn.aptech.estore.services;
 import vn.aptech.estore.entities.Product;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -23,7 +25,7 @@ public interface ShoppingCartService {
 
     void removeAll();
 
-    Hashtable<Long, Product> getItems();
+    Map<Long, Product> getItems();
 
     Set<Product> getProducts();
 

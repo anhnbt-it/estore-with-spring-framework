@@ -2,13 +2,12 @@ package vn.aptech.estore.menu.home;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import vn.aptech.estore.entities.Customer;
-import vn.aptech.estore.entities.Order;
+import vn.aptech.estore.entities.*;
 import vn.aptech.estore.menu.AuthMenu;
 import vn.aptech.estore.menu.BaseMenu;
-import vn.aptech.estore.services.CustomerService;
-import vn.aptech.estore.services.OrderService;
-import vn.aptech.estore.services.ShoppingCartService;
+import vn.aptech.estore.services.*;
+
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,10 +25,13 @@ public class PaymentMenu extends BaseMenu {
     private OrderService orderService;
 
     @Autowired
-    private CustomerService customerService;
+    private OrderDetailService orderDetailService;
 
     @Autowired
     private ShoppingCartService shoppingCartService;
+
+    @Autowired
+    private ProductService productService;
 
     public PaymentMenu() {
         super("Thông tin thanh toán");
@@ -37,12 +39,15 @@ public class PaymentMenu extends BaseMenu {
 
     @Override
     public void start() {
-        String choice = enterString("Bạn đã là thành viên? [y/N]: ");
-        if (choice.equalsIgnoreCase("y")) {
-            authMenu.start();
-        } else {
-            Order order = new Order();
-            printMenuHeader("Địa chỉ giao hàng");
+        printTitle("Chọn hình thức giao hàng");
+        String choice;
+        Order order = new Order();
+        Customer customer = new Customer();
+        if (AuthService.user == null) {
+            choice = enterString("Bạn đã là thành viên? [y/N]: ");
+            if (choice.equalsIgnoreCase("y")) {
+                authMenu.start();
+            }
             String firstName = enterString("Họ: ", true);
             String lastName = enterString("Tên: ", true);
             String email = enterString("Email: ", true);
@@ -52,42 +57,54 @@ public class PaymentMenu extends BaseMenu {
 //            String districts = enterString("Quận/Huyện: ", true);
 //            String wards = enterString("Phường/Xã: ", true);
 //            String address = enterString("Địa chỉ nhận hàng: ", true);
-            Customer customer = new Customer();
             customer.setFirstName(firstName);
             customer.setLastName(lastName);
             customer.setEmail(email);
             customer.setPhone(phone);
-
-            printTitle("Chọn hình thức giao hàng");
-            int shippingMethod = 1;
-            System.out.println("1) [x] Giao hàng tận nơi");
-            System.out.println("(Chỉ hỗ trợ Giao hàng tận nơi)");
-            shippingMethod = enterInteger("Chọn hình thức giao hàng: ");
-            if (shippingMethod != 1) {
-                System.out.println("Hình thức giao hàng không hợp lệ");
-            }
-            System.out.println("1) [x] Thanh toán tiền mặt khi nhận hàng (Mặc định)");
-            System.out.println("2) Chuyển khoản ngân hàng");
-            int paymentMethod = 1;
-            paymentMethod = enterInteger("Chọn hình thức thanh toán: ");
-            if (paymentMethod < 1 || paymentMethod > 2) {
-                System.out.println("Hình thức thanh toán không hợp lệ");
-            }
-            choice = enterString("Xác nhận thanh toán? [y/N]: ", true);
-            if ("y".equalsIgnoreCase(choice)) {
-                Customer newCustomer = customerService.save(customer);
-                order.setCustomer(newCustomer);
-                order.setProducts(shoppingCartService.getProducts());
-                order.setPayment(String.valueOf(paymentMethod));
-                order.setShipping(String.valueOf(shippingMethod));
-                Order newOrder = orderService.save(order);
-                if (newOrder != null) {
-                    System.out.println("Cảm ơn bạn đã đặt hàng");
-                    System.out.println("Một email xác nhận đã được gửi tới " + email);
-                    System.out.println("Xin vui lòng kiểm tra email của bạn");
-                } else {
-                    System.out.println("Đã xảy ra lỗi khi đặt hàng. Vui lòng thử lại");
+        } else {
+            customer.setFirstName(AuthService.user.getFirstName());
+            customer.setLastName(AuthService.user.getLastName());
+            customer.setEmail(AuthService.user.getEmail());
+            customer.setPhone(AuthService.user.getPhone());
+        }
+        int shippingMethod = 1;
+        System.out.println("1) Giao hàng tận nơi");
+        shippingMethod = enterInteger("Chọn hình thức giao hàng: ");
+        if (shippingMethod != 1) {
+            System.out.println("Hình thức giao hàng không hợp lệ");
+        }
+        System.out.println("1) Thanh toán tiền mặt khi nhận hàng");
+        System.out.println("2) Chuyển khoản ngân hàng");
+        int paymentMethod = 1;
+        paymentMethod = enterInteger("Chọn hình thức thanh toán: ");
+        if (paymentMethod < 1 || paymentMethod > 2) {
+            System.out.println("Hình thức thanh toán không hợp lệ");
+        }
+        choice = enterString("Xác nhận thanh toán? [y/N]: ", true);
+        if ("y".equalsIgnoreCase(choice)) {
+            order.setCustomer(customer);
+            order.setPayment(String.valueOf(paymentMethod));
+            order.setShipping(String.valueOf(shippingMethod));
+            Order newOrder = orderService.save(order);
+            if (newOrder != null) {
+                for (Product product : shoppingCartService.getProducts()) {
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.setOrderDetailId(new OrderDetailId(newOrder.getId(), product.getId()));
+                    orderDetail.setProduct(product);
+                    orderDetail.setQuantity(product.getQuantity());
+                    orderDetail.setPrice(product.getUnitPrice());
+                    orderDetailService.save(orderDetail);
+                    Optional<Product> prod = productService.findById(orderDetail.getProduct().getId());
+                    if (prod.isPresent()) {
+                        prod.get().setQuantity(prod.get().getQuantity() - orderDetail.getQuantity());
+                        productService.save(prod.get());
+                    }
                 }
+                // Tạo đơn hàng
+                // Trừ số lượng sản phẩm trong kho
+                System.out.println("Cảm ơn bạn đã đặt hàng");
+                System.out.println("Một email xác nhận đã được gửi tới " + customer.getEmail());
+                System.out.println("Xin vui lòng kiểm tra email của bạn");
             }
         }
     }

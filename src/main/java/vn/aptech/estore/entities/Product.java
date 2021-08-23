@@ -36,10 +36,10 @@ public class Product extends AbstractEntity {
     private Set<Attribute> attributes;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
+    private List<Image> images;
 
-    @ManyToMany(mappedBy = "products", fetch = FetchType.EAGER)
-    private Set<Order> orders;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<OrderDetail> orderDetails;
 
     private String name;
 

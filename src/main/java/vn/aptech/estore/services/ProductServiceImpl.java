@@ -2,9 +2,11 @@ package vn.aptech.estore.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.aptech.estore.entities.Product;
 import vn.aptech.estore.repositories.ProductRepository;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 @Service
@@ -23,6 +25,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAllByOrderByCreatedDateDesc();
     }
 
+    @Transactional(rollbackFor = {SQLException.class})
     @Override
     public Product save(Product product) {
         return productRepository.save(product);
