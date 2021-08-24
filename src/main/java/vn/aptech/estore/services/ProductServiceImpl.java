@@ -25,6 +25,11 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAllByOrderByCreatedDateDesc();
     }
 
+    @Override
+    public Iterable<Product> findAllByOrderByUnitsOnOrderDesc() {
+        return productRepository.findAllByOrderByUnitsOnOrderDesc();
+    }
+
     @Transactional(rollbackFor = {SQLException.class})
     @Override
     public Product save(Product product) {

@@ -38,6 +38,12 @@ public class HomeMenu extends BaseMenu {
     @Autowired
     private CartMenu cartMenu;
 
+    @Autowired
+    private PopularProductMenu popularProductMenu;
+
+    @Autowired
+    private RecentProductMenu recentProductMenu;
+
     public HomeMenu() {
         super("Cửa hàng");
         this.menuItems.put(1, "Sản phẩm mới nhất");
@@ -55,33 +61,10 @@ public class HomeMenu extends BaseMenu {
             int choice = enterChoice();
             switch (choice) {
                 case OPTION_RECENT_PRODUCT:
-                    List<Product> products = IterableUtils.toList(productService.findAllByOrderByCreatedDateDesc());
-                    if (products.isEmpty()) {
-                        showMsg(Constant.MESSAGE_TYPE.INFO, Constant.Response.LIST_EMPTY);
-                    } else {
-                        System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-15s |%n", "ID", "Tên", "Giá", "% Giảm", "Giá giảm");
-                        for (Product product : products) {
-                            System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-15s |%n", product.getId(), StringCommon.truncate(product.getName(), 20),
-                                    StringCommon.convertDoubleToVND(product.getUnitPrice()), product.getDiscountStr(), StringCommon.convertDoubleToVND(product.getCompareAtPrice()));
-                        }
-                        long productId = enterInteger("Nhập ID sản phẩm bạn muốn mua: ", true);
-                        Optional<Product> product = productService.findById(productId);
-                        if (!product.isPresent()) {
-                            System.out.println("Không có sản phẩm nào");
-                        } else {
-                            int qty = enterInteger("Nhap so luong: ", true);
-                            if (qty < 1) {
-                                System.out.println("So luong toi thieu phai la 1");
-                            } else if (qty > product.get().getQuantity()) {
-                                System.out.println("* Số lượng tối đa được phép mua: " + product.get().getQuantity());
-                                qty = product.get().getQuantity();
-                            }
-                            product.get().setQuantity(qty);
-                            shoppingCartService.addToCart(product.get());
-                        }
-                    }
+                    recentProductMenu.start();
                     break;
                 case OPTION_POPULAR_PRODUCT:
+                    popularProductMenu.start();
                     break;
                 case OPTION_ALL_CATEGORIES:
                     break;

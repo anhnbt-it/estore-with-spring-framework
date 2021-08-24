@@ -9,6 +9,8 @@ public interface ProductService {
 
     Iterable<Product> findAllByOrderByCreatedDateDesc();
 
+    Iterable<Product> findAllByOrderByUnitsOnOrderDesc();
+
     Product save(Product product);
 
     Optional<Product> findById(Long id);
