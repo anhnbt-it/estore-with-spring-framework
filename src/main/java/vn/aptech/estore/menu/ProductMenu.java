@@ -113,7 +113,7 @@ public class ProductMenu extends CRUDMenu {
             product.setDiscountPercent(scanner.nextFloat());
 
             System.out.println("Nhập số lượng: ");
-            product.setQuantity(scanner.nextInt());
+            product.setUnitsInStock(scanner.nextInt());
 
             System.out.println("Nhập trạng thái [true - Hiển thị; false - Ẩn]: ");
             product.setStatus(scanner.nextBoolean());

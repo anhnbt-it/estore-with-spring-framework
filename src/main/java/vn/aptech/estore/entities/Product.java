@@ -55,13 +55,11 @@ public class Product extends AbstractEntity {
     @Column(length = 5000)
     private String description;
 
-    private Integer quantity;
-
     @Column(name = "units_in_stock")
-    private Short unitsInStock;
+    private Integer unitsInStock;
 
     @Column(name = "units_on_order")
-    private Short unitsOnOrder;
+    private Integer unitsOnOrder;
 
     private Boolean status;
 
@@ -78,7 +76,6 @@ public class Product extends AbstractEntity {
                 ", unitPrice=" + unitPrice +
                 ", thumbnailUrl='" + thumbnailUrl + '\'' +
                 ", description='" + description + '\'' +
-                ", quantity=" + quantity +
                 ", unitsInStock=" + unitsInStock +
                 ", unitsOnOrder=" + unitsOnOrder +
                 ", status=" + status +

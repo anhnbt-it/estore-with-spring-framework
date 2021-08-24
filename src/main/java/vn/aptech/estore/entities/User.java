@@ -18,9 +18,11 @@ import java.util.Date;
 public class User extends AbstractEntity {
     protected String firstName;
     protected String lastName;
+    @Column(unique = true)
     protected String email;
     @Column(length = 14)
     protected String phone;
+    @Column(unique = true)
     protected String username;
     protected String password;
     @Column(name = "date_of_birth")

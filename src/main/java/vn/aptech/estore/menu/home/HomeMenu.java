@@ -78,13 +78,17 @@ public class HomeMenu extends BaseMenu {
                             System.out.println("Không có sản phẩm nào");
                         } else {
                             int qty = enterInteger("Nhap so luong: ", true);
+                            if (product.get().getUnitsInStock() < 1) {
+                                System.out.println("Sản phẩm đã hết hàng");
+                                break;
+                            }
                             if (qty < 1) {
                                 System.out.println("So luong toi thieu phai la 1");
-                            } else if (qty > product.get().getQuantity()) {
-                                System.out.println("* Số lượng tối đa được phép mua: " + product.get().getQuantity());
-                                qty = product.get().getQuantity();
+                            } else if (qty > product.get().getUnitsInStock()) {
+                                System.out.println("* Số lượng tối đa được phép mua: " + product.get().getUnitsInStock());
+                                qty = product.get().getUnitsInStock();
                             }
-                            product.get().setQuantity(qty);
+                            product.get().setUnitsInStock(qty);
                             shoppingCartService.addToCart(product.get());
                         }
                     }

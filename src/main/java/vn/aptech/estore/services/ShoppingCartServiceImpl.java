@@ -3,7 +3,10 @@ package vn.aptech.estore.services;
 import org.springframework.stereotype.Service;
 import vn.aptech.estore.entities.Product;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -58,7 +61,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void updateCart(Long id, Product product) {
         Product prod = items.get(id);
-        prod.setQuantity(prod.getQuantity() + product.getQuantity());
+        prod.setUnitsInStock(prod.getUnitsInStock() + product.getUnitsInStock());
         items.put(id, prod);
     }
 
@@ -83,8 +86,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public int getNumberOfItems() {
         for (Map.Entry<Long, Product> entry : items.entrySet()) {
             Product product = entry.getValue();
-            total += product.getQuantity() * product.getUnitPrice();
-            numberOfItems += product.getQuantity();
+            total += product.getUnitsInStock() * product.getUnitPrice();
+            numberOfItems += product.getUnitsInStock();
         }
         return numberOfItems;
     }
