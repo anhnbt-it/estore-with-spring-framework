@@ -23,6 +23,11 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    public void deleteById(Long id) {
+        brandRepository.deleteById(id);
+    }
+
+    @Override
     public Optional<Brand> findById(Long id) {
         return brandRepository.findById(id);
     }

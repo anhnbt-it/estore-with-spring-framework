@@ -9,5 +9,7 @@ public interface SupplierService {
 
     Supplier save(Supplier supplier);
 
+    void deleteById(Long id);
+
     Optional<Supplier> findById(Long id);
 }

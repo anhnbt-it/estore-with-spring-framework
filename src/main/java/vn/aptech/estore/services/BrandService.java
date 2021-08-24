@@ -7,7 +7,9 @@ import java.util.Optional;
 public interface BrandService {
     Iterable<Brand> findAll();
 
-    Brand save(Brand brand);
+    Brand save(Brand category);
+
+    void deleteById(Long id);
 
     Optional<Brand> findById(Long id);
 }

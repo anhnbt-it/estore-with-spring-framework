@@ -2,13 +2,12 @@ package vn.aptech.estore.menu;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import vn.aptech.estore.common.StringCommon;
 import vn.aptech.estore.constant.Constant;
+import vn.aptech.estore.entities.Role;
 
-import java.math.BigDecimal;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Scanner;
+import java.text.ParseException;
+import java.util.*;
 
 public abstract class BaseMenu {
     protected String title;
@@ -79,6 +78,19 @@ public abstract class BaseMenu {
         return num;
     }
 
+    protected int enterInteger(String title, boolean required) {
+        int num;
+        do {
+            System.out.println(title);
+            num = scanner.nextInt();
+            if (num == 0 && required) {
+                System.out.println(Constant.Response.OBJECT_REQUIRED);
+            }
+        } while (num == 0);
+        scanner.nextLine();
+        return num;
+    }
+
     protected double enterDouble(String title, boolean required) {
         double num;
         do {
@@ -92,22 +104,28 @@ public abstract class BaseMenu {
         return num;
     }
 
+    protected boolean enterBoolean(String title) {
+        System.out.println(title);
+        boolean b = scanner.nextBoolean();
+        scanner.nextLine();
+        return b;
+    }
+
+    protected Date enterDate(String title) throws ParseException {
+        System.out.println(title);
+        String input = scanner.nextLine();
+        return StringCommon.stringToDate(input, Constant.DATE_FORMAT);
+    }
+
+    protected Role enterRole(String title) {
+        System.out.println(title);
+        String input = scanner.nextLine();
+        return Role.valueOf(input);
+    }
+
     protected double enterDouble(String title) {
         System.out.println(title);
         double num = scanner.nextDouble();
-        scanner.nextLine();
-        return num;
-    }
-
-    protected int enterInteger(String title, boolean required) {
-        int num;
-        do {
-            System.out.println(title);
-            num = scanner.nextInt();
-            if (num == 0 && required) {
-                System.out.println(Constant.Response.OBJECT_REQUIRED);
-            }
-        } while (num == 0);
         scanner.nextLine();
         return num;
     }

@@ -53,17 +53,20 @@ public class AuthMenu extends BaseMenu {
     }
 
     public void register() {
-        this.printMenuHeader();
+        printTitle("Đăng ký");
         System.out.println(messageSource.getMessage("enter.field.name", new Object[]{}, Locale.getDefault()));
         String username = scanner.nextLine();
         System.out.println(messageSource.getMessage("enter.field.password", new Object[]{}, Locale.getDefault()));
         String password = scanner.nextLine();
-
-        User user = userService.save(new User(username, password, Role.ROLE_USER));
-        if (user == null) {
-            System.out.println(messageSource.getMessage("message.error.system", new Object[]{}, Locale.getDefault()));
+        if (userService.existsByUsername(username)) {
+            System.out.println("Tên tài khoản đã tồn tại");
         } else {
-            System.out.println(messageSource.getMessage("message.register.success", new Object[]{}, Locale.getDefault()));
+            User user = userService.save(new User(username, password, Role.ROLE_USER));
+            if (user == null) {
+                System.out.println(messageSource.getMessage("message.error.system", new Object[]{}, Locale.getDefault()));
+            } else {
+                System.out.println(messageSource.getMessage("message.register.success", new Object[]{}, Locale.getDefault()));
+            }
         }
     }
 }

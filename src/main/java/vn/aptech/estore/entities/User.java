@@ -4,13 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.sql.Date;
-import java.util.Set;
+import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -21,9 +18,11 @@ import java.util.Set;
 public class User extends AbstractEntity {
     protected String firstName;
     protected String lastName;
+    @Column(unique = true)
     protected String email;
     @Column(length = 14)
     protected String phone;
+    @Column(unique = true)
     protected String username;
     protected String password;
     @Column(name = "date_of_birth")

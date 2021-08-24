@@ -7,6 +7,8 @@ import java.util.Optional;
 public interface UserService {
     Iterable<User> findAll();
 
+    Optional<User> findById(Long id);
+
     User save(User user);
 
     Optional<User> findByUsername(String username);
@@ -16,4 +18,7 @@ public interface UserService {
     boolean existByEmail(String email);
 
     boolean existsByUsername(String username);
+
+    void deleteById(Long id);
+
 }

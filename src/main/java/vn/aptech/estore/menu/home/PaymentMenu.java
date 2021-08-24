@@ -7,7 +7,7 @@ import vn.aptech.estore.menu.AuthMenu;
 import vn.aptech.estore.menu.BaseMenu;
 import vn.aptech.estore.services.*;
 
-import java.util.*;
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -91,12 +91,13 @@ public class PaymentMenu extends BaseMenu {
                     OrderDetail orderDetail = new OrderDetail();
                     orderDetail.setOrderDetailId(new OrderDetailId(newOrder.getId(), product.getId()));
                     orderDetail.setProduct(product);
-                    orderDetail.setQuantity(product.getQuantity());
+                    orderDetail.setQuantity(product.getUnitsInStock());
                     orderDetail.setPrice(product.getUnitPrice());
                     orderDetailService.save(orderDetail);
                     Optional<Product> prod = productService.findById(orderDetail.getProduct().getId());
                     if (prod.isPresent()) {
-                        prod.get().setQuantity(prod.get().getQuantity() - orderDetail.getQuantity());
+                        prod.get().setUnitsInStock(prod.get().getUnitsInStock() - orderDetail.getQuantity());
+                        prod.get().setUnitsOnOrder(prod.get().getUnitsOnOrder() + orderDetail.getQuantity());
                         productService.save(prod.get());
                     }
                 }

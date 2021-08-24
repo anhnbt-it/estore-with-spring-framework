@@ -7,6 +7,8 @@ import vn.aptech.estore.common.StringCommon;
 import vn.aptech.estore.constant.Constant;
 import vn.aptech.estore.entities.Product;
 import vn.aptech.estore.menu.BaseMenu;
+import vn.aptech.estore.menu.CategoryMenu;
+import vn.aptech.estore.menu.profile.ProfileMenu;
 import vn.aptech.estore.services.ProductService;
 import vn.aptech.estore.services.ShoppingCartService;
 
@@ -30,10 +32,16 @@ public class HomeMenu extends BaseMenu {
     public static final int OPTION_BACK = 0;
 
     @Autowired
+    private CategoryMenu categoryMenu;
+
+    @Autowired
     private ProductService productService;
 
     @Autowired
     private ShoppingCartService shoppingCartService;
+
+    @Autowired
+    private ProfileMenu profileMenu;
 
     @Autowired
     private CartMenu cartMenu;
@@ -67,11 +75,13 @@ public class HomeMenu extends BaseMenu {
                     popularProductMenu.start();
                     break;
                 case OPTION_ALL_CATEGORIES:
+                    categoryMenu.showAll();
                     break;
                 case OPTION_SHOPPING_CART:
                     cartMenu.start();
                     break;
                 case OPTION_PROFILE:
+                    profileMenu.start();
                     break;
                 case OPTION_BACK:
                     return;

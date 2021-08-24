@@ -1,5 +1,6 @@
 package vn.aptech.estore.menu;
 
+import java.text.ParseException;
 import java.util.Scanner;
 
 /**
@@ -62,7 +63,7 @@ public abstract class CRUDMenu extends BaseMenu {
 
     public abstract void create();
 
-    public abstract void update();
+    public abstract void update() throws ParseException;
 
     public abstract void delete();
 

@@ -38,9 +38,9 @@ public class CartMenu extends BaseMenu {
             System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-5s | %-15s |%n", "ID", "Tên", "Đơn giá", "% Giảm", "Số lượng", "Thành tiền");
             for (Map.Entry<Long, Product> entry : items.entrySet()) {
                 Product product = entry.getValue();
-                double total = product.getUnitPrice() * product.getQuantity();
+                double total = product.getUnitPrice() * product.getUnitsInStock();
                 System.out.printf("| %-5s | %-20s | %-15s | %-5s | %-5s | %-15s |%n", product.getId(), StringCommon.truncate(product.getName(), 20),
-                        StringCommon.convertDoubleToVND(product.getUnitPrice()), product.getDiscountStr(), product.getQuantity(), StringCommon.convertDoubleToVND(total));
+                        StringCommon.convertDoubleToVND(product.getUnitPrice()), product.getDiscountStr(), product.getUnitsInStock(), StringCommon.convertDoubleToVND(total));
             }
             shoppingCartService.getNumberOfItems();
             System.out.println("Tổng Số Tiền (gồm VAT): " + StringCommon.convertDoubleToVND(shoppingCartService.getTotal()));
