@@ -18,6 +18,7 @@ public class ExitMenu extends BaseMenu {
     public void start() {
         String choice = enterString("Bạn có chắc chắn muốn đóng ứng dụng? [y/N]: ");
         if ("y".equalsIgnoreCase(choice)) {
+            System.out.println("Bye bye...");
             System.exit(0);
         }
     }

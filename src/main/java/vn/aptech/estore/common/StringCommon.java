@@ -1,10 +1,7 @@
 package vn.aptech.estore.common;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.Date;
 import java.util.Locale;
 
@@ -33,6 +30,11 @@ public class StringCommon {
     public static String dateFormat(Date date, String format) {
         DateFormat dateFormat = new SimpleDateFormat(format);
         return dateFormat.format(date);
+    }
+
+    public static Date stringToDate(String date, String format) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.parse(date);
     }
 
     public static String truncate(String str, int length) {

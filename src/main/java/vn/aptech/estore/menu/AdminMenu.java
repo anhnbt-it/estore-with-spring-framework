@@ -8,6 +8,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import vn.aptech.estore.constant.Constant;
 import vn.aptech.estore.menu.home.HomeMenu;
+import vn.aptech.estore.menu.profile.ProfileMenu;
 import vn.aptech.estore.services.AuthService;
 
 /**
