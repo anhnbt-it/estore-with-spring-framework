@@ -26,7 +26,7 @@ public class Product extends AbstractEntity {
     @JoinColumn(name = "supplier_id", nullable = false, updatable = false)
     private Supplier supplier;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "product_attributes",
             joinColumns = {@JoinColumn(name = "product_id")},
@@ -55,14 +55,14 @@ public class Product extends AbstractEntity {
     private String description;
 
     @Column(name = "units_in_stock")
-    private Integer unitsInStock;
+    private Integer unitsInStock = 0;
 
     @Column(name = "units_on_order")
-    private Integer unitsOnOrder;
+    private Integer unitsOnOrder = 0;
 
-    private Boolean status;
+    private Boolean status = true;
 
-    private Float discountPercent;
+    private Float discountPercent = 0f;
 
     public String getDiscountStr() {
         return (discountPercent > 0) ? "-" + (discountPercent * 100) + "%" : "0";

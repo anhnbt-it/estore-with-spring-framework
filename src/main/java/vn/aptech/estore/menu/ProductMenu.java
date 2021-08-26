@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import vn.aptech.estore.common.StringCommon;
+import vn.aptech.estore.constant.Constant;
 import vn.aptech.estore.entities.*;
 import vn.aptech.estore.services.*;
 
@@ -199,12 +200,55 @@ public class ProductMenu extends CRUDMenu {
 
     @Override
     public void showAll() {
-
+        printTitle("Danh sách Sản phẩm");
+        List<Product> products = IterableUtils.toList(productService.findAll());
+        if (products.isEmpty()) {
+            showMsg(Constant.MESSAGE_TYPE.INFO, Constant.Response.LIST_EMPTY);
+        } else {
+            System.out.printf("| %-5s | %-20s | %-10s |%n", "ID", "Tên", "Ngày tạo");
+            for (Product product : products) {
+                System.out.printf("| %-5s | %-20s | %-10s |%n", product.getId(), StringCommon.truncate(product.getName(), 20), StringCommon.dateFormat(product.getCreatedDate(), Constant.DATE_FORMAT));
+            }
+        }
     }
 
     @Override
     public void showOne() {
-
+        printTitle("Xem chi tiết Sản phẩm");
+        do {
+            String choice = enterString("Bạn có muốn xem Danh sách sản phẩm không? [y/N]: ", true);
+            if ("y".equalsIgnoreCase(choice)) {
+                showAll();
+            }
+            long productId = enterInteger("Nhập ID sản phẩm muốn xem: ");
+            Optional<Product> product = productService.findById(productId);
+            if (!product.isPresent()) {
+                System.out.println("Không tìm thấy");
+            } else {
+                printDivider();
+                System.out.println("Tên: " + product.get().getName());
+                System.out.println("Danh mục: " + product.get().getCategory().getName());
+                System.out.println("Thương hiệu: " + product.get().getBrand().getName());
+                System.out.println("Nhà cung cấp: " + product.get().getSupplier().getName());
+                System.out.println("Giá: " + StringCommon.convertDoubleToVND(product.get().getUnitPrice()));
+                System.out.println("% Giảm giá: " + product.get().getDiscountStr());
+                System.out.println("Giá giảm: " + StringCommon.convertDoubleToVND(product.get().getCompareAtPrice()));
+                System.out.println("Số lượng trong kho: " + product.get().getUnitsInStock());
+                System.out.println("Số lượng đã bán: " + product.get().getUnitsOnOrder());
+                System.out.println("Mô tả: " + product.get().getDescription());
+                System.out.println("Thuộc tính");
+                for (Attribute attribute : product.get().getAttributes()) {
+                    System.out.println(attribute.getAttributeGroup().getName() + ": " + attribute.getName());
+                }
+                System.out.println("Thời gian tạo: " + StringCommon.dateFormat(product.get().getCreatedDate(), Constant.DATE_TIME_FORMAT));
+                System.out.println("Thời gian cập nhật: " + StringCommon.dateFormat(product.get().getModifiedDate(), Constant.DATE_TIME_FORMAT));
+                printDivider();
+                choice = enterString("Bạn muốn xem sản phẩm khác không? [y/N]: ");
+                if (!"y".equalsIgnoreCase(choice)) {
+                    break;
+                }
+            }
+        } while (true);
     }
 
     private void deleteProduct() {

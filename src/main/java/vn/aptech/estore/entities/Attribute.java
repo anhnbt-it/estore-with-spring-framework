@@ -19,6 +19,6 @@ public class Attribute extends AbstractEntity {
     @JoinColumn(name = "attribute_group_id", nullable = false, updatable = false)
     private AttributeGroup attributeGroup;
 
-//    @ManyToMany(mappedBy = "attributes", fetch = FetchType.EAGER)
-//    private Collection<Product> products = new ArrayList<>();
+    @ManyToMany(mappedBy = "attributes", fetch = FetchType.EAGER)
+    private Collection<Product> products = new ArrayList<>();
 }
