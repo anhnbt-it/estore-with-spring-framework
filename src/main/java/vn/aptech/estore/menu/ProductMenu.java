@@ -6,18 +6,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import vn.aptech.estore.entities.Brand;
-import vn.aptech.estore.entities.Category;
-import vn.aptech.estore.entities.Product;
-import vn.aptech.estore.entities.Supplier;
-import vn.aptech.estore.services.BrandService;
-import vn.aptech.estore.services.CategoryService;
-import vn.aptech.estore.services.ProductService;
-import vn.aptech.estore.services.SupplierService;
+import vn.aptech.estore.entities.*;
+import vn.aptech.estore.services.*;
 
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 @Component
 public class ProductMenu extends CRUDMenu {
@@ -36,6 +33,9 @@ public class ProductMenu extends CRUDMenu {
     private ProductService productService;
 
     @Autowired
+    private AttributeGroupService attributeGroupService;
+
+    @Autowired
     private MessageSource messageSource;
 
     public ProductMenu() {
@@ -45,6 +45,7 @@ public class ProductMenu extends CRUDMenu {
     @Override
     public void create() {
         try {
+            printTitle("Bước 1: Thông tin cơ bản");
             Product product = new Product();
             String choice = enterString("Bạn muốn xem danh sách danh mục? [y/N]: ");
             if ("y".equalsIgnoreCase(choice)) {
@@ -106,9 +107,10 @@ public class ProductMenu extends CRUDMenu {
                 product.setBrand(brand.get());
             }
             product.setName(enterString("Nhập tên: ", true));
-            product.setDescription(enterString("Nhập mô tả: "));
+            product.setDescription(enterString("Nhập mô tả [Toi da 5000 ky tu]: "));
             product.setThumbnailUrl("Nhập ảnh: ");
             product.setUnitPrice(enterDouble("Nhập giá: ", true));
+            product.setCompareAtPrice(product.getUnitPrice() - product.getUnitPrice() * product.getDiscountPercent());
             System.out.println("Nhập % giảm giá (Ví dụ: 0.1 tương đương 10%): ");
             product.setDiscountPercent(scanner.nextFloat());
 
@@ -118,10 +120,51 @@ public class ProductMenu extends CRUDMenu {
             System.out.println("Nhập trạng thái [true - Hiển thị; false - Ẩn]: ");
             product.setStatus(scanner.nextBoolean());
 
+            printTitle("Bước 2: Ảnh sản phẩm");
+            List<Image> images = new ArrayList<>();
+            do {
+                Image image = new Image();
+                String thumbUrl = enterString("Nhập đường đến tập tin ảnh trong máy: ");
+                Path target = copyFile(thumbUrl, "C:\\projects\\hanoi-aptech\\SEM 2\\estore-with-spring-framework\\src\\main\\resources\\images");
+                if (target.isAbsolute()) {
+                    image.setThumbnailUrl(target.getFileName().toString());
+                    images.add(image);
+                }
+                choice = enterString("Ban co muon them anh khac khong? (y/N): ");
+            } while ("y".equalsIgnoreCase(choice));
+            product.setImages(images);
 
-            product.setCompareAtPrice(product.getUnitPrice() - product.getUnitPrice() * product.getDiscountPercent());
+            printTitle("Bước 2: Thuộc tính của sản phẩm");
+            Set<Attribute> attributes = new HashSet<>();
+            do {
+                choice = enterString("Bạn muốn xem danh sách thuộc tính? [y/N]: ");
+                if ("y".equalsIgnoreCase(choice)) {
+                    List<AttributeGroup> attributeGroups = IterableUtils.toList(attributeGroupService.findAll());
+                    if (!attributeGroups.isEmpty()) {
+                        for (AttributeGroup attributeGroup : attributeGroups) {
+                            System.out.println(attributeGroup.toString());
+                        }
+                    } else {
+                        System.out.println("Chưa có thuộc tính nào");
+                        return;
+                    }
+                }
+                long attributeGroupId = enterInteger("Nhập ID thuộc tính: ", true);
+                Optional<AttributeGroup> attributeGroup = attributeGroupService.findById(attributeGroupId);
+                if (!attributeGroup.isPresent()) {
+                    System.out.println("Không tìm thấy thuộc tính nào có ID là '" + brandId + "'");
+                } else {
+                    Attribute attribute = new Attribute();
+                    attribute.setAttributeGroup(attributeGroup.get());
+                    attribute.setName(enterString("Nhập giá trị cho thuộc tính \"" + attributeGroup.get().getName() + "\":", true));
+                    attributes.add(attribute);
+                }
+                choice = enterString("Ban co muon them thuộc tính khac khong? (y/N): ");
+            } while ("y".equalsIgnoreCase(choice));
+            product.setAttributes(attributes);
+
             Product newProduct = productService.save(product);
-            if (newProduct.getId() != null) {
+            if (newProduct != null) {
                 System.out.println("Thêm sản phẩm mới thành công!");
             } else {
                 System.out.println("Thêm sản phẩm bị lỗi!");
@@ -158,5 +201,21 @@ public class ProductMenu extends CRUDMenu {
         System.out.println("Vui lòng chờ...");
         System.out.println("Bạn không xóa sản phẩm ''");
         System.out.println("Xóa sản phẩm '' thành công!");
+    }
+
+    private Path copyFile(String filePath, String dir) {
+        Path sourceFile = Paths.get(filePath);
+        Path targetDir = Paths.get(dir);
+        Path targetFile = targetDir.resolve(sourceFile.getFileName());
+        try {
+            Path target = Files.copy(sourceFile, targetFile);
+        } catch (FileAlreadyExistsException e) {
+            System.err.format("File '%s' da ton tai.\n", targetFile);
+        } catch (IOException e) {
+            System.err.format("Loi khi sao chep tep '%s'.\n", targetFile);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        return targetFile;
     }
 }
