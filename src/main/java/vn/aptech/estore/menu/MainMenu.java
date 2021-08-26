@@ -9,10 +9,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import vn.aptech.estore.entities.Role;
 import vn.aptech.estore.entities.User;
+import vn.aptech.estore.menu.home.CartMenu;
 import vn.aptech.estore.menu.home.HomeMenu;
 import vn.aptech.estore.services.UserService;
 
 import java.util.Locale;
+import java.util.logging.Level;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,8 +24,7 @@ import java.util.Locale;
  */
 @Component
 public class MainMenu extends BaseMenu implements CommandLineRunner {
-
-    private static final Logger log = LoggerFactory.getLogger(MainMenu.class);
+    private static final Logger logger = LoggerFactory.getLogger(CartMenu.class);
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -78,7 +79,7 @@ public class MainMenu extends BaseMenu implements CommandLineRunner {
                 }
             } while (true);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.error(Level.INFO.getName(), e);
         }
     }
 
@@ -93,9 +94,9 @@ public class MainMenu extends BaseMenu implements CommandLineRunner {
             admin.setPassword("admin");
             admin.setRole(Role.ROLE_ADMIN);
             userService.save(admin);
-            log.info("Create admin account 'admin' password: 'admin'");
+            logger.info("Create admin account 'admin' password: 'admin'");
         }
-        log.info("-------------------------------");
+        logger.info("-------------------------------");
         if (!userService.findByUsername("user").isPresent()) {
             User user = new User();
             user.setFirstName("Khoai");
@@ -105,9 +106,9 @@ public class MainMenu extends BaseMenu implements CommandLineRunner {
             user.setPassword("user");
             user.setRole(Role.ROLE_USER);
             userService.save(user);
-            log.info("Create user account 'user' password: 'user'");
+            logger.info("Create user account 'user' password: 'user'");
         }
-        log.info("-------------------------------");
+        logger.info("-------------------------------");
 
         this.start();
     }

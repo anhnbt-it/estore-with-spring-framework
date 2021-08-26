@@ -9,4 +9,7 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     Iterable<Product> findAllByOrderByCreatedDateDesc();
 
     Iterable<Product> findAllByOrderByUnitsOnOrderDesc();
+
+    Iterable<Product> findByNameContaining(String name);
+
 }

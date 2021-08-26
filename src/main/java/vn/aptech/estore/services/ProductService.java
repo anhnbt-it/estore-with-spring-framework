@@ -11,6 +11,8 @@ public interface ProductService {
 
     Iterable<Product> findAllByOrderByUnitsOnOrderDesc();
 
+    Iterable<Product> findByNameContaining(String name);
+
     Product save(Product product);
 
     Optional<Product> findById(Long id);

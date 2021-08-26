@@ -29,6 +29,7 @@ public class HomeMenu extends BaseMenu {
     public static final int OPTION_ALL_CATEGORIES = 3;
     public static final int OPTION_SHOPPING_CART = 4;
     public static final int OPTION_PROFILE = 5;
+    public static final int OPTION_SEARCH_PRODUCT = 6;
     public static final int OPTION_BACK = 0;
 
     @Autowired
@@ -47,6 +48,9 @@ public class HomeMenu extends BaseMenu {
     private CartMenu cartMenu;
 
     @Autowired
+    private SearchProductMenu searchProductMenu;
+
+    @Autowired
     private PopularProductMenu popularProductMenu;
 
     @Autowired
@@ -59,6 +63,7 @@ public class HomeMenu extends BaseMenu {
         this.menuItems.put(3, "Tất cả danh mục");
         this.menuItems.put(4, "Giỏ hàng");
         this.menuItems.put(5, "Tài khoản");
+        this.menuItems.put(6, "Tìm kiếm sản phẩm");
         this.menuItems.put(0, "Quay lại");
     }
 
@@ -82,6 +87,9 @@ public class HomeMenu extends BaseMenu {
                     break;
                 case OPTION_PROFILE:
                     profileMenu.start();
+                    break;
+                case OPTION_SEARCH_PRODUCT:
+                    searchProductMenu.start();
                     break;
                 case OPTION_BACK:
                     return;

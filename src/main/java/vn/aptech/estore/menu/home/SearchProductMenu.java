@@ -16,11 +16,11 @@ import java.util.Optional;
 /**
  * Created by IntelliJ IDEA.
  * User: Nguyen Ba Tuan Anh <anhnbt.it@gmail.com>
- * Date: 8/24/2021
- * Time: 8:10 PM
+ * Date: 8/25/2021
+ * Time: 8:48 PM
  */
 @Component
-public class PopularProductMenu extends BaseMenu {
+public class SearchProductMenu extends BaseMenu {
 
     @Autowired
     private ProductService productService;
@@ -28,14 +28,15 @@ public class PopularProductMenu extends BaseMenu {
     @Autowired
     private ShoppingCartService shoppingCartService;
 
-    public PopularProductMenu() {
-        super("Sản phẩm bán chạy");
+    public SearchProductMenu() {
+        super("Tìm kiếm sản phẩm");
     }
 
     @Override
     public void start() {
         printMenuHeader();
-        List<Product> products = IterableUtils.toList(productService.findAllByOrderByUnitsOnOrderDesc());
+        String name = enterString("Nhập tên sản phẩm cần tìm: ", true);
+        List<Product> products = IterableUtils.toList(productService.findByNameContaining(name));
         if (products.isEmpty()) {
             showMsg(Constant.MESSAGE_TYPE.INFO, Constant.Response.LIST_EMPTY);
         } else {
@@ -47,7 +48,7 @@ public class PopularProductMenu extends BaseMenu {
             long productId = enterInteger("Nhập ID sản phẩm bạn muốn mua: ", true);
             Optional<Product> product = productService.findById(productId);
             if (!product.isPresent()) {
-                System.out.println("Không có sản phẩm nào");
+                System.out.println("Không tìm thấy sản phẩm nào có ID = " + productId);
             } else {
                 int qty = enterInteger("Nhap so luong: ", true);
                 if (product.get().getUnitsInStock() < 1) {

@@ -30,6 +30,11 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAllByOrderByUnitsOnOrderDesc();
     }
 
+    @Override
+    public Iterable<Product> findByNameContaining(String name) {
+        return productRepository.findByNameContaining(name);
+    }
+
     @Transactional(rollbackFor = {SQLException.class})
     @Override
     public Product save(Product product) {
