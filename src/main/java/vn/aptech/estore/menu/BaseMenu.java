@@ -111,6 +111,26 @@ public abstract class BaseMenu {
         return b;
     }
 
+    protected float enterFloat(String title, boolean required) {
+        float f;
+        do {
+            System.out.println(title);
+            f = scanner.nextFloat();
+            if (f == 0 && required) {
+                System.out.println(Constant.Response.OBJECT_REQUIRED);
+            }
+        } while (f == 0);
+        scanner.nextLine();
+        return f;
+    }
+
+    protected float enterFloat(String title) {
+        System.out.println(title);
+        float f = scanner.nextFloat();
+        scanner.nextLine();
+        return f;
+    }
+
     protected Date enterDate(String title) throws ParseException {
         System.out.println(title);
         String input = scanner.nextLine();

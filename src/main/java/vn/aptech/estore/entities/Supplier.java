@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -26,7 +27,7 @@ public class Supplier extends AbstractEntity {
     private String thumbnailUrl;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Product> products = new ArrayList<>();
+    private Collection<Product> products = new ArrayList<>();
 
     @Override
     public String toString() {

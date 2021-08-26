@@ -4,10 +4,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.Collection;
+import java.util.HashSet;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -33,13 +32,13 @@ public class Product extends AbstractEntity {
             joinColumns = {@JoinColumn(name = "product_id")},
             inverseJoinColumns = {@JoinColumn(name = "attribute_id")}
     )
-    private Set<Attribute> attributes;
+    private Collection<Attribute> attributes = new HashSet<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Image> images;
+    private Collection<Image> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<OrderDetail> orderDetails;
+    private Collection<OrderDetail> orderDetails = new ArrayList<>();
 
     private String name;
 

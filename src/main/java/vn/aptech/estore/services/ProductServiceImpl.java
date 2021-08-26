@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     @Autowired

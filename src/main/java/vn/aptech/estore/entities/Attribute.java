@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -17,6 +19,6 @@ public class Attribute extends AbstractEntity {
     @JoinColumn(name = "attribute_group_id", nullable = false, updatable = false)
     private AttributeGroup attributeGroup;
 
-    @ManyToMany(mappedBy = "attributes", fetch = FetchType.EAGER)
-    private Set<Product> products;
+//    @ManyToMany(mappedBy = "attributes", fetch = FetchType.EAGER)
+//    private Collection<Product> products = new ArrayList<>();
 }

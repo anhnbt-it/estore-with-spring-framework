@@ -30,6 +30,7 @@ public class AdminMenu extends BaseMenu {
     private static final int OPTION_PROFILE = 9;
     private static final int OPTION_SIGNOUT = 10;
     private static final int OPTION_SHOPPING = 11;
+    private static final int OPTION_ATTRIBUTE_GROUP = 12;
     private static final int OPTION_BACK = 0;
 
     @Autowired
@@ -66,6 +67,9 @@ public class AdminMenu extends BaseMenu {
     private HomeMenu homeMenu;
 
     @Autowired
+    private AttributeGroupMenu attributeGroupMenu;
+
+    @Autowired
     private ExitMenu exitMenu;
 
     @Autowired
@@ -85,6 +89,7 @@ public class AdminMenu extends BaseMenu {
         menuItems.put(OPTION_PROFILE, "Tài khoản");
         menuItems.put(OPTION_SIGNOUT, "Đăng xuất");
         menuItems.put(OPTION_SHOPPING, "Cửa hàng");
+        menuItems.put(OPTION_ATTRIBUTE_GROUP, "Quản lý Nhóm thuộc tính");
         menuItems.put(OPTION_BACK, "Quay lại");
 
     }
@@ -129,6 +134,9 @@ public class AdminMenu extends BaseMenu {
                         break;
                     case OPTION_SHOPPING:
                         homeMenu.start();
+                        break;
+                    case OPTION_ATTRIBUTE_GROUP:
+                        attributeGroupMenu.start();
                         break;
                     case OPTION_BACK:
                         exitMenu.start();

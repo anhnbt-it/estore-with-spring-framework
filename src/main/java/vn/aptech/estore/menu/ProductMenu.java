@@ -4,8 +4,10 @@ import org.apache.commons.collections4.IterableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
+import vn.aptech.estore.common.StringCommon;
 import vn.aptech.estore.entities.*;
 import vn.aptech.estore.services.*;
 
@@ -38,6 +40,9 @@ public class ProductMenu extends CRUDMenu {
     @Autowired
     private MessageSource messageSource;
 
+    @Value("${uploadPath}")
+    private String uploadPath;
+
     public ProductMenu() {
         super("Sản phẩm");
     }
@@ -45,14 +50,17 @@ public class ProductMenu extends CRUDMenu {
     @Override
     public void create() {
         try {
-            printTitle("Bước 1: Thông tin cơ bản");
+            printTitle("Thêm mới sản phẩm");
+            printTitle("Bước 1: Nhập thông tin cơ bản");
             Product product = new Product();
             String choice = enterString("Bạn muốn xem danh sách danh mục? [y/N]: ");
             if ("y".equalsIgnoreCase(choice)) {
                 List<Category> categories = IterableUtils.toList(categoryService.findAll());
                 if (!categories.isEmpty()) {
+                    printTitle("Danh sách danh mục");
+                    System.out.printf("| %-5s | %-20s |%n", "ID", "Tên");
                     for (Category category : categories) {
-                        System.out.println(category.toString());
+                        System.out.printf("| %-5s | %-20s |%n", category.getId(), StringCommon.truncate(category.getName(), 20));
                     }
                 } else {
                     System.out.println("Chưa có danh mục nào");
@@ -72,8 +80,10 @@ public class ProductMenu extends CRUDMenu {
             if ("y".equalsIgnoreCase(choice)) {
                 List<Supplier> suppliers = IterableUtils.toList(supplierService.findAll());
                 if (!suppliers.isEmpty()) {
+                    printTitle("Danh sách nhà cung cấp");
+                    System.out.printf("| %-5s | %-20s |%n", "ID", "Tên");
                     for (Supplier supplier : suppliers) {
-                        System.out.println(supplier.toString());
+                        System.out.printf("| %-5s | %-20s |%n", supplier.getId(), StringCommon.truncate(supplier.getName(), 20));
                     }
                 } else {
                     System.out.println("Chưa có nhà cung cấp nào");
@@ -91,8 +101,10 @@ public class ProductMenu extends CRUDMenu {
             if ("y".equalsIgnoreCase(choice)) {
                 List<Brand> brands = IterableUtils.toList(brandService.findAll());
                 if (!brands.isEmpty()) {
+                    printTitle("Danh sách thương hiệu");
+                    System.out.printf("| %-5s | %-20s |%n", "ID", "Tên");
                     for (Brand brand : brands) {
-                        System.out.println(brand.toString());
+                        System.out.printf("| %-5s | %-20s |%n", brand.getId(), StringCommon.truncate(brand.getName(), 20));
                     }
                 } else {
                     System.out.println("Chưa có thương hiệu nào");
@@ -108,51 +120,52 @@ public class ProductMenu extends CRUDMenu {
             }
             product.setName(enterString("Nhập tên: ", true));
             product.setDescription(enterString("Nhập mô tả [Toi da 5000 ky tu]: "));
-            product.setThumbnailUrl("Nhập ảnh: ");
             product.setUnitPrice(enterDouble("Nhập giá: ", true));
+            product.setDiscountPercent(enterFloat("Nhập % giảm giá (Ví dụ: 0.1 tương đương 10%): "));
             product.setCompareAtPrice(product.getUnitPrice() - product.getUnitPrice() * product.getDiscountPercent());
-            System.out.println("Nhập % giảm giá (Ví dụ: 0.1 tương đương 10%): ");
-            product.setDiscountPercent(scanner.nextFloat());
-
-            System.out.println("Nhập số lượng: ");
-            product.setUnitsInStock(scanner.nextInt());
-
-            System.out.println("Nhập trạng thái [true - Hiển thị; false - Ẩn]: ");
-            product.setStatus(scanner.nextBoolean());
-
-            printTitle("Bước 2: Ảnh sản phẩm");
+            product.setUnitsInStock(enterInteger("Nhập số lượng: ", true));
+            product.setStatus(enterBoolean("Nhập trạng thái [true - Hiển thị; false - Ẩn]: "));
+            printTitle("Bước 2: Nhập ảnh sản phẩm");
             List<Image> images = new ArrayList<>();
             do {
                 Image image = new Image();
-                String thumbUrl = enterString("Nhập đường đến tập tin ảnh trong máy: ");
-                Path target = copyFile(thumbUrl, "C:\\projects\\hanoi-aptech\\SEM 2\\estore-with-spring-framework\\src\\main\\resources\\images");
+                String thumbUrl = enterString("Nhập đường đến tập tin ảnh trong máy: ", true);
+                Path target = copyFile(thumbUrl, uploadPath);
                 if (target.isAbsolute()) {
-                    image.setThumbnailUrl(target.getFileName().toString());
                     images.add(image);
+                    choice = enterString("Bạn có muốn dùng ảnh này làm ảnh thumbnail? [y/N]: ");
+                    if ("y".equalsIgnoreCase(choice)) {
+                        image.setThumbnailUrl(target.getFileName().toString());
+                    }
                 }
                 choice = enterString("Ban co muon them anh khac khong? (y/N): ");
             } while ("y".equalsIgnoreCase(choice));
             product.setImages(images);
 
-            printTitle("Bước 2: Thuộc tính của sản phẩm");
+            printTitle("Bước 3: Nhập thuộc tính cho sản phẩm");
             Set<Attribute> attributes = new HashSet<>();
             do {
-                choice = enterString("Bạn muốn xem danh sách thuộc tính? [y/N]: ");
+                choice = enterString("Bạn muốn xem danh sách nhóm thuộc tính? [y/N]: ");
                 if ("y".equalsIgnoreCase(choice)) {
                     List<AttributeGroup> attributeGroups = IterableUtils.toList(attributeGroupService.findAll());
                     if (!attributeGroups.isEmpty()) {
                         for (AttributeGroup attributeGroup : attributeGroups) {
                             System.out.println(attributeGroup.toString());
                         }
+                        printTitle("Danh sách nhóm thuộc tính");
+                        System.out.printf("| %-5s | %-20s |%n", "ID", "Tên");
+                        for (AttributeGroup attributeGroup : attributeGroups) {
+                            System.out.printf("| %-5s | %-20s |%n", attributeGroup.getId(), StringCommon.truncate(attributeGroup.getName(), 20));
+                        }
                     } else {
-                        System.out.println("Chưa có thuộc tính nào");
+                        System.out.println("Chưa có nhóm thuộc tính nào");
                         return;
                     }
                 }
-                long attributeGroupId = enterInteger("Nhập ID thuộc tính: ", true);
+                long attributeGroupId = enterInteger("Nhập ID nhóm thuộc tính: ", true);
                 Optional<AttributeGroup> attributeGroup = attributeGroupService.findById(attributeGroupId);
                 if (!attributeGroup.isPresent()) {
-                    System.out.println("Không tìm thấy thuộc tính nào có ID là '" + brandId + "'");
+                    System.out.println("Không tìm thấy nhóm thuộc tính nào có ID là '" + attributeGroupId + "'");
                 } else {
                     Attribute attribute = new Attribute();
                     attribute.setAttributeGroup(attributeGroup.get());

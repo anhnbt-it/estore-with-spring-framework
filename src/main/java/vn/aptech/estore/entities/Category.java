@@ -8,6 +8,7 @@ import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -23,5 +24,5 @@ public class Category extends AbstractEntity {
     private String thumbnailUrl;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Product> products;
+    private Collection<Product> products = new ArrayList<>();
 }
