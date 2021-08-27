@@ -32,6 +32,7 @@ public class Constant {
         public static final String OBJECT_IS_EXISTS = "Đối tượng {0} đã tồn tại";
         public static final String OBJECT_IS_EXISTS_BY_FIELD_VALUE = "Đối tượng {0} với giá trị của {1} là {2} đã tồn tại";
         public static final String MISSING_PARAM = "Thiếu dữ liệu đầu vào bắt buộc {0}";
+        public static final String INVALID_REGEX = "Định dạng {0} không hợp lệ";
         public static final String OBJECT_REQUIRED = "Trường không được để trống. Vui lòng nhập lại";
         public static final String STR_REQUIRED = "Các trường bắt buộc được đánh dấu *";
         public static final String STR_CONFIRM_EXIT = "Are you sure you want to exit? [y/N]";
