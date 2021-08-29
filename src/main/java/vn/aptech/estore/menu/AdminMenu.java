@@ -145,7 +145,7 @@ public class AdminMenu extends BaseMenu {
                         showMsg(Constant.MESSAGE_TYPE.ERROR, Constant.Response.INVALID_OPTION);
 
                 }
-            } while (choice != 0);
+            } while (choice != -1);
         } catch (Exception e) {
             LOGGER.log(Level.ERROR, e);
         }
