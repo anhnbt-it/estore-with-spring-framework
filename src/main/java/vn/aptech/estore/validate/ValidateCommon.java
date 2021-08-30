@@ -24,7 +24,7 @@ public class ValidateCommon {
             throw new CommonException(Constant.Response.MISSING_PARAM);
     }
 
-    public static boolean validateUsername(String name) {
+    public static boolean isValidUsername(String name) {
         validateNullObject(name);
         String regex = "^[a-z]\\w{5,29}$";
         Pattern p = Pattern.compile(regex);
@@ -38,5 +38,17 @@ public class ValidateCommon {
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(password);
         return !m.matches();
+    }
+
+    public static boolean isValidCharacter(String name) {
+        validateNullObject(name);
+        String regex = "^[A-Za-z0-9\\s\\-_,\\.:;()''\"\"]+$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(name);
+        return !m.matches();
+    }
+
+    public static boolean isValidStringLength(String str, int min, int max) {
+        return str.length() < min || str.length() > max;
     }
 }

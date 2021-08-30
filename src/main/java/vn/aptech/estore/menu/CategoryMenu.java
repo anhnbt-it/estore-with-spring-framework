@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import vn.aptech.estore.common.StringCommon;
 import vn.aptech.estore.constant.Constant;
 import vn.aptech.estore.entities.Category;
+import vn.aptech.estore.exception.CommonException;
 import vn.aptech.estore.services.*;
 
 import java.sql.Timestamp;
@@ -44,14 +45,24 @@ public class CategoryMenu extends CRUDMenu {
 
     @Override
     public void create() {
-        printTitle("Thêm danh mục");
         Category category = new Category();
-        category.setName(enterString("Nhập tên: ", true));
-        if (categoryService.save(category) != null) {
-            showMsg(Constant.MESSAGE_TYPE.SUCCESS, Constant.Response.OBJECT_CREATED);
-        } else {
-            showMsg(Constant.MESSAGE_TYPE.ERROR, Constant.Response.SYSTEM_ERROR);
-        }
+        printTitle("Thêm danh mục");
+        do {
+            category.setName(enterString("Nhập tên: ", true));
+            try {
+                if (categoryService.save(category) != null) {
+                    showMsg(Constant.MESSAGE_TYPE.SUCCESS, Constant.Response.OBJECT_CREATED);
+                } else {
+                    showMsg(Constant.MESSAGE_TYPE.ERROR, Constant.Response.SYSTEM_ERROR);
+                }
+                String choice = enterString("Bạn muốn thêm danh mục khác không? [y/N]: ");
+                if (!"y".equalsIgnoreCase(choice)) {
+                    break;
+                }
+            } catch (CommonException e) {
+                System.err.println(e.getMessage());
+            }
+        } while (true);
     }
 
     @Override

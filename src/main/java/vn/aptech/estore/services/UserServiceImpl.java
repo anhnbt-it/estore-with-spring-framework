@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public User save(User user) {
         ValidateCommon.validateNullObject(user.getUsername());
         ValidateCommon.validateNullObject(user.getPassword());
-        if (!ValidateCommon.validateUsername(user.getUsername())) {
+        if (!ValidateCommon.isValidUsername(user.getUsername())) {
             throw new CommonException("Tên tài khoản không hợp lệ. Chỉ chấp nhận chữ viết thường và chữ số");
         }
         if (!ValidateCommon.validatePassword(user.getPassword())) {
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findByUsernameAndPassword(String username, String password) {
-        ValidateCommon.validateUsername(username);
+        ValidateCommon.isValidUsername(username);
         ValidateCommon.validatePassword(password);
         return Optional.ofNullable(userRepository.findByUsernameAndPassword(username, password));
     }
